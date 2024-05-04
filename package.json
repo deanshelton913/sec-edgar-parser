@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["SEC","EDGAR"],
+  "author": "dean shelton",
   "license": "ISC",
   "devDependencies": {
     "@biomejs/biome": "1.7.2",
