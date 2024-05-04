@@ -14,7 +14,7 @@ async function getJsonFromSecArchive(){
 }
 
 ```
-
+### Example output
 ```json
 {
   "accessionNumber": "0001511164-18-000283",
