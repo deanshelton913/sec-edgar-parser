@@ -2,3 +2,5 @@ test-fixtures
 src
 *.tgz
 *test*
+.vscode*
+biome.json
