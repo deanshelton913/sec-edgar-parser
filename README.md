@@ -4,3 +4,13 @@ This tool was built to parse edgar formatted documents like those found at https
 
 
 
+## Example
+```ts
+import { getJsonFromUrl } from "sec-edgar-parser";
+async function getJsonFromSecArchive(){
+    const url = 'https://www.sec.gov/Archives/edgar/data/1456857/000151116418000283/0001511164-18-000283.txt';
+    const obj = await getJsonFromUrl(url);
+    console.log(`output: ${outputPath}`)
+}
+
+```
