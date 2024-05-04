@@ -1,1 +1,1 @@
-export {getObjectFromString, getObjectFromUrl} from './parser'
+export { getObjectFromString, getObjectFromUrl } from "./parser";
