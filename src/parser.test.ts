@@ -19,19 +19,19 @@ describe("SEC EDGAR Parser", () => {
       "MJ Holdings, Inc.",
     );
     expect(res.filer.filingValues.formType).toEqual("8-K");
-
   });
   test("Properly parses document 1", async () => {
     const res = await parser.getObjectFromString(docs[1]);
     expect(typeof res.issuer).toBe("object");
     expect(res.reportingOwner.ownerData.organizationName).toBe(null);
-
   });
   test("Properly parses document 3", async () => {
     const obj = await parser.getObjectFromString(docs[3]);
 
-    expect(obj.seriesAndClassesContractsData.existingSeriesAndClassesContracts.series.length).toBe(2);
-    expect(obj.filer.businessAddress.state).toBe('WI');
+    expect(
+      obj.seriesAndClassesContractsData.existingSeriesAndClassesContracts.series
+        .length,
+    ).toBe(2);
+    expect(obj.filer.businessAddress.state).toBe("WI");
   });
-  
 });

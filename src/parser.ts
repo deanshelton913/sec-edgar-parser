@@ -38,24 +38,24 @@ const removeNSpaces = (str, N) => {
   return copy;
 };
 const tabsToSpaces = (str) => {
-    const leadingTabs = str.match(/^\t+/);
-    if (!leadingTabs) {
-        return str;
-    }
-    const numSpaces = 2 * leadingTabs[0].length;
-    const spaces = ' '.repeat(numSpaces);
-    return spaces + str.replace(/^\t+/, '');
+  const leadingTabs = str.match(/^\t+/);
+  if (!leadingTabs) {
+    return str;
+  }
+  const numSpaces = 2 * leadingTabs[0].length;
+  const spaces = " ".repeat(numSpaces);
+  return spaces + str.replace(/^\t+/, "");
 };
 function badYamlToObj(text: string) {
-  const lines = text.split("\n").map(tabsToSpaces)
+  const lines = text.split("\n").map(tabsToSpaces);
   const depthOfFirstLine = spaceDepth(lines[0]);
   let normalizedYaml = "";
   let i = 0;
   for (const line of lines) {
     let cleaned = removeNSpaces(line, depthOfFirstLine);
-    const [key, val] = line.split(':')
-    if(key.trim()){
-        cleaned = `${key}__${i}:${val}`;
+    const [key, val] = line.split(":");
+    if (key.trim()) {
+      cleaned = `${key}__${i}:${val}`;
     }
     normalizedYaml += `${cleaned}\n`;
     i++;
@@ -109,7 +109,7 @@ function recursivelyFlattenDuplicateKeysWithNumbers(obj) {
  */
 export function parseYamlLikeString(text: string) {
   const obj = badYamlToObj(text); // first pass, just create an valid object
-//   console.log(JSON.stringify(obj, null, 2))
+  //   console.log(JSON.stringify(obj, null, 2))
   const x = recursivelyFlattenDuplicateKeysWithNumbers(obj); // second pass, clean up the object.
   return x;
 }
