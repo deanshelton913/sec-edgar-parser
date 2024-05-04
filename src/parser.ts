@@ -19,6 +19,8 @@ function toCamelCase(str) {
     return camelCaseString;
   }
 
+const tabDepth = (line) => ((line.match(/^\t*/)?.[0] || "").length);
+
 function transformTextToValidJson(inputText: string) {
 	let everOpened = false; // Flag to track if any object has been opened
 	let justOpened = false; // Flag to track if the last line opened a new object
@@ -26,7 +28,6 @@ function transformTextToValidJson(inputText: string) {
 
 	// Split the content into lines
 	const lines = inputText.trim().split("\n");
-
 	// Process each line
 	const transformedLines = lines.map((line, i) => {
 		// Check if the line is empty
@@ -52,16 +53,30 @@ function transformTextToValidJson(inputText: string) {
 
 		// Convert the key to camelCase
 		const safeKey = toCamelCase(key);
+        const currentTabDepth = tabDepth(lines[i])
 
-		// Check if the value is not empty or undefined
-		if (value !== undefined && value !== "") {
-			justOpened = false; // Reset the flag for justOpened
-			return `"${safeKey}__${i}": "${value}",`; // Return transformed line for key-value pair
+		// Check if the value SEEMS empty or undefined
+		if (value === undefined || value === "") {
+            // detect null values by looking ahead in the doc
+            const nextTabDepth = tabDepth(lines[i+1])
+            if(nextTabDepth<currentTabDepth){
+                justOpened = false; // Reset the flag for justOpened
+                return `"${safeKey}__${i}": null,`; // Return null value
+            }
+            
+            justOpened = true; // Set the flag for justOpened as true
+            everOpened = true; // Set the flag for everOpened as true
+            console.log({safeKey, openCount, currentTabDepth})
+            let prepend = '';
+            if(currentTabDepth<openCount){
+                prepend = `${"}\n".repeat(openCount-currentTabDepth)},`
+                openCount=0
+            }
+            openCount++; // Increment the open object count
+            return `${prepend}"${safeKey}__${i}": {`; // Return transformed line for opening object
 		}
-		justOpened = true; // Set the flag for justOpened as true
-		everOpened = true; // Set the flag for everOpened as true
-		openCount++; // Increment the open object count
-		return `"${safeKey}__${i}": {`; // Return transformed line for opening object
+        justOpened = false; // Reset the flag for justOpened
+        return `"${safeKey}__${i}": "${value}",`; // Return transformed line for key-value pair
 	});
 
 	// Join the transformed lines and format the result
@@ -120,6 +135,7 @@ export async function parseSecHeaderString(text: string) {
 	try {
 		const transformedText = transformTextToValidJson(text);
 		const cleanDanglingCommas = transformedText.replace(/,\s*([\]}])/g, "$1");
+        console.log(cleanDanglingCommas)
 		const obj = JSON.parse(cleanDanglingCommas);
 		return removeNumberedKeys(obj);
 	} catch (e) {

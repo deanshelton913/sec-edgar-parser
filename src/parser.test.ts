@@ -14,5 +14,6 @@ describe('sum module', () => {
     const doc = await parser.trimDocument(docTwo);
     const res = await parser.parseSecHeaderString(doc)
     expect(typeof res.issuer).toBe('object')
+    expect(res.reportingOwner.ownerData.organizationName).toBe(null)
   });
 });
