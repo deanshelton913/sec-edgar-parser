@@ -66,7 +66,6 @@ function transformTextToValidJson(inputText: string) {
             
             justOpened = true; // Set the flag for justOpened as true
             everOpened = true; // Set the flag for everOpened as true
-            console.log({safeKey, openCount, currentTabDepth})
             let prepend = '';
             if(currentTabDepth<openCount){
                 prepend = `${"}\n".repeat(openCount-currentTabDepth)},`
@@ -135,7 +134,6 @@ export async function parseSecHeaderString(text: string) {
 	try {
 		const transformedText = transformTextToValidJson(text);
 		const cleanDanglingCommas = transformedText.replace(/,\s*([\]}])/g, "$1");
-        console.log(cleanDanglingCommas)
 		const obj = JSON.parse(cleanDanglingCommas);
 		return removeNumberedKeys(obj);
 	} catch (e) {
@@ -155,19 +153,19 @@ export function trimDocument(file: string) {
 	return fileLines.slice(3, endOfHeaderIndex).join("\n");
 }
 
-/**
- * Fetches the SEC header string from the provided URL and extracts the header section.
- * @param {string} url - The URL to fetch the SEC filing from.
- * @returns {Promise<string>} - A promise that resolves to the SEC header string.
- * @private
- */
-async function getSecHeaderStringFromUrl(url: string) {
+
+async function callTheSEC(url: string) {
 	const fileResponse = await fetch(url);
-	const file = await fileResponse.text();
-	return trimDocument(file);
+	return fileResponse.text();
 }
 
-export async function parseSecHeaderStringFromUrl(url: string) {
-	const headerString = await getSecHeaderStringFromUrl(url);
-	return parseSecHeaderString(headerString);
+export async function getJsonFromUrl(url: string) {
+	const doc = await callTheSEC(url);
+    const justTheTip = trimDocument(doc);
+	return parseSecHeaderString(justTheTip);
+}
+
+export async function getJsonFromString(text: string){
+	const justTheTip = trimDocument(text);
+	return parseSecHeaderString(justTheTip);
 }

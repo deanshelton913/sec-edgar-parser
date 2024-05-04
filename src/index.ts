@@ -1,0 +1,1 @@
+export {getJsonFromString, getJsonFromUrl} from './parser'
