@@ -5,12 +5,12 @@ const docOne = fs.readFileSync(path.join(__dirname,'test-fixtures','one.txt'),'u
 const docTwo = fs.readFileSync(path.join(__dirname,'test-fixtures','two.txt'),'utf-8');
 describe('SEC EDGAR Parser', () => {
   test('Properly parses document one', async () => {
-    const res = await parser.getJsonFromString(docOne)
+    const res = await parser.getObjectFromString(docOne)
     expect(res.filer.companyData.companyConformedName).toEqual('MJ Holdings, Inc.')
     expect(res.filer.filingValues.formType).toEqual('8-K')
   });
   test('Properly parses document two', async () => {
-    const res = await parser.getJsonFromString(docTwo)
+    const res = await parser.getObjectFromString(docTwo)
     expect(typeof res.issuer).toBe('object')
     expect(res.reportingOwner.ownerData.organizationName).toBe(null)
   });

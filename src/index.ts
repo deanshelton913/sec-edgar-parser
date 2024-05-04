@@ -1,1 +1,1 @@
-export {getJsonFromString, getJsonFromUrl} from './parser'
+export {getObjectFromString, getObjectFromUrl} from './parser'

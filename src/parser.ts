@@ -159,13 +159,13 @@ async function callTheSEC(url: string) {
 	return fileResponse.text();
 }
 
-export async function getJsonFromUrl(url: string) {
+export async function getObjectFromUrl(url: string) {
 	const doc = await callTheSEC(url);
     const justTheTip = trimDocument(doc);
 	return parseSecHeaderString(justTheTip);
 }
 
-export async function getJsonFromString(text: string){
+export async function getObjectFromString(text: string){
 	const justTheTip = trimDocument(text);
 	return parseSecHeaderString(justTheTip);
 }

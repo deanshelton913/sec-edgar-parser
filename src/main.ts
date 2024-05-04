@@ -1,5 +1,5 @@
 import fs from 'node:fs/promises';
-import { getJsonFromUrl } from "./parser";
+import { getObjectFromUrl, getObjectFromString } from "./parser";
 
 const urls = [
     'https://www.sec.gov/Archives/edgar/data/1456857/000151116418000283/0001511164-18-000283.txt',
@@ -25,7 +25,7 @@ function getLastSegmentWithoutExtension(urlString) {
         const promise = (async (url) => {
             console.log(`Calling: ${url}`)
             const accessionNumber = getLastSegmentWithoutExtension(url)
-            const obj = await getJsonFromUrl(url);
+            const obj = await getObjectFromUrl(url);
             const outputPath = `/tmp/SEC-output-${accessionNumber}.json`;
             await fs.writeFile(outputPath,JSON.stringify(obj, null, 2),'utf-8');
             console.log(`output: ${outputPath}`)

@@ -6,12 +6,28 @@ This tool was built to parse edgar formatted documents like those found at https
 
 ## Example
 ```ts
-import { getJsonFromUrl } from "sec-edgar-parser";
-async function getJsonFromSecArchive(){
+import { getObjectFromUrl, getObjectFromString } from "sec-edgar-parser";
+
+// Example: from a url
+async function getObjectFromUrl(){
     const url = 'https://www.sec.gov/Archives/edgar/data/1456857/000151116418000283/0001511164-18-000283.txt';
-    const obj = await getJsonFromUrl(url);
+    const obj = await getObjectFromUrl(url);
     console.log(JSON.stringify(obj, null, 2));
 }
+
+// Example: from a string
+const string = `
+FILER:
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			MJ Holdings, Inc.
+		CENTRAL INDEX KEY:			0001456857
+		STANDARD INDUSTRIAL CLASSIFICATION:	SERVICES-BUSINESS SERVICES, NEC [7389]
+		IRS NUMBER:				208235905
+		STATE OF INCORPORATION:			NV
+		FISCAL YEAR END:			1231
+`
+console.log(JSON.stringify(getObjectFromString(string), null, 2))
 
 ```
 ### Example output
