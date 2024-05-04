@@ -1,7 +1,7 @@
 {
   "name": "sec-edgar-parser",
-  "version": "1.0.4",
-  "description": "A tool used to parse edgar text files found at https://www.sec.gov/Archives/edgar/data",
+  "version": "1.0.5",
+  "description": "A tool for scraping SEC edgar archive documents found at https://www.sec.gov/Archives/edgar/data",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
