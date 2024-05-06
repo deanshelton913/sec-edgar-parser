@@ -1,5 +1,5 @@
 import fs from "node:fs/promises";
-import { getObjectFromUrl, getObjectFromString } from "./parser";
+import { getObjectFromUrl, getObjectFromString as _getObjectFromString} from "./parser";
 
 const urls = [
   "https://www.sec.gov/Archives/edgar/data/1456857/000151116418000283/0001511164-18-000283.txt",
@@ -11,7 +11,7 @@ const urls = [
   "https://www.sec.gov/Archives/edgar/data/1454889/000110465922103420/0001104659-22-103420.txt",
 ];
 
-function getLastSegmentWithoutExtension(urlString) {
+function getLastSegmentWithoutExtension(urlString: string) {
   const url = new URL(urlString);
   const pathnameParts = url.pathname.split("/");
   const lastSegment = pathnameParts[pathnameParts.length - 1];

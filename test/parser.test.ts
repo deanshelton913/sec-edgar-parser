@@ -1,6 +1,6 @@
 import path from "node:path";
 import fs from "node:fs";
-import * as parser from "./parser";
+import * as parser from "../src/parser";
 
 const files = fs.readdirSync(path.join(__dirname, "test-fixtures"));
 const numericallySortedFiles = files.sort((a, b) => {
