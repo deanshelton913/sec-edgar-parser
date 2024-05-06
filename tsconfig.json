@@ -3,12 +3,16 @@
       "noEmit": false,
       "baseUrl": ".",
       "outDir": "dist",
+      "rootDir": "src",
       "importHelpers": true,
       "target": "es6",
-      "strict": false,
+      "strict": true,
       "moduleResolution": "node",
       "module": "CommonJS",
+      "declaration": true,
       "resolveJsonModule": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
       "allowJs": true,
       "forceConsistentCasingInFileNames": true,
       "esModuleInterop": true,
@@ -16,6 +20,6 @@
       "isolatedModules": true
     },
     "include": ["src/**/*.ts"],
-    "exclude": ["node_modules", "dist"]
+    "exclude": ["node_modules", "dist", "test"]
   }
   

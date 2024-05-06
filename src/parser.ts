@@ -1,8 +1,10 @@
 import * as yaml from "yaml";
 const { XMLParser } = require("fast-xml-parser");
 
+type IndexedObject = { [k: string]: any };
+
 // Function to convert a string to camelCase
-export function toCamelCase(str) {
+export function toCamelCase(str: string) {
   // Split the string into words based on spaces and hyphens
   const words = str.split(/[\s-]+/);
 
@@ -22,46 +24,56 @@ export function toCamelCase(str) {
   return camelCaseString;
 }
 
-const tabDepth = (line) => (line.match(/^\t*/)?.[0] || "").length;
-const spaceDepth = (line) => (line.match(/^ */)?.[0] || "").length;
-const replaceCharAtIndex = (str, index, newChar) => {
+const spaceDepth = (line: string) => (line.match(/^ */)?.[0] || "").length;
+const replaceCharAtIndex = (str: string, index: number, newChar: string) => {
   return str.substring(0, index) + newChar + str.substring(index + 1);
 };
-const removeNSpaces = (str, N) => {
+
+const removeNSpaces = (str: string, N: number) => {
   let copy = str;
+
   for (let index = 0; index < N; index++) {
     const char = copy[index];
     if (char === " ") {
       copy = replaceCharAtIndex(copy, index, "");
     }
   }
+
   return copy;
 };
-const tabsToSpaces = (str) => {
+
+const tabsToSpaces = (str: string) => {
   const leadingTabs = str.match(/^\t+/);
-  if (!leadingTabs) {
-    return str;
-  }
+
+  if (!leadingTabs) return str;
+
   const numSpaces = 2 * leadingTabs[0].length;
   const spaces = " ".repeat(numSpaces);
+
   return spaces + str.replace(/^\t+/, "");
 };
+
 function badYamlToObj(text: string) {
   const lines = text.split("\n").map(tabsToSpaces);
   const depthOfFirstLine = spaceDepth(lines[0]);
   let normalizedYaml = "";
   let i = 0;
+
   for (const line of lines) {
     let cleaned = removeNSpaces(line, depthOfFirstLine);
     const [key, val] = line.split(":");
+
     if (key.trim()) {
       cleaned = `${key}__${i}:${val}`;
     }
+
     normalizedYaml += `${cleaned}\n`;
     i++;
   }
+
   let obj = yaml.parse(normalizedYaml);
   obj = camelizeKeys(obj);
+
   return obj;
 }
 
@@ -70,7 +82,7 @@ function badYamlToObj(text: string) {
  * @param {object} obj - The object from which numbered keys should be removed.
  * @returns {object} - The modified object with numbered keys removed.
  */
-function recursivelyFlattenDuplicateKeysWithNumbers(obj) {
+function recursivelyFlattenDuplicateKeysWithNumbers(obj: IndexedObject) {
   let newKey = ""; // Variable to store the modified key without the numbered suffix
   for (const key in obj) {
     if (key.includes("__")) {
@@ -119,7 +131,7 @@ export function badXmlToObj(xmlString: string) {
   const lines = xmlString.split("\n");
 
   // Stack to keep track of open tags
-  const stack = [];
+  const stack: string[] = [];
 
   // Corrected XML string
   let correctedXML = "";
@@ -162,26 +174,29 @@ export function badXmlToObj(xmlString: string) {
   const xmlParser = new XMLParser();
   let obj = xmlParser.parse(correctedXML);
   obj = camelizeKeys(obj);
+
   return obj.secHeader;
 }
 
-function camelizeKeys(obj) {
+function camelizeKeys<T>(obj: T): T {
   if (typeof obj !== "object" || obj === null) {
     return obj;
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => camelizeKeys(item));
+    return obj.map((item: any) => camelizeKeys(item)) as any;
   }
 
-  const newObj = {};
+  const newObj: IndexedObject = {};
+
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const camelCaseKey = toCamelCase(key);
       newObj[camelCaseKey] = camelizeKeys(obj[key]);
     }
   }
-  return newObj;
+
+  return newObj as any;
 }
 
 export function trimDocument(file: string) {

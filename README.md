@@ -2,9 +2,16 @@
 
 This tool was built to parse edgar formatted documents like those found at https://www.sec.gov/Archives/edgar/data/1849440/000084251724000086/0000842517-24-000086.txt into usable JSON.
 
+### Be advised
+Edgar does enforce IP based rate limiting -- currently set at ten requests per second. 
 
 
 ## Example
+
+```bash
+$ npm install sec-edgar-parser
+```
+
 ```ts
 import { getObjectFromUrl, getObjectFromString } from "sec-edgar-parser";
 
@@ -80,3 +87,6 @@ console.log(JSON.stringify(getObjectFromString(string), null, 2))
   }
 }
 ```
+
+## License
+This project is licensed under the ISC License - see the [License](https://en.wikipedia.org/wiki/ISC_license) for details.
