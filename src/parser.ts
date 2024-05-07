@@ -67,11 +67,11 @@ function badYamlToObj(text: string) {
     const [key, val] = line.split(":");
 
     if (key.trim()) {
-      let cleanVal = val.trim();
+      let cleanVal = val.trim().replace(`'`,`''`);
       if (cleanVal.trim() === "") {
         cleanVal = "";
       } else {
-        cleanVal = ` '${val.trim()}'`;
+        cleanVal = ` '${cleanVal}'`;
       }
       cleaned = `${key}__${i}:${cleanVal}`;
     }
