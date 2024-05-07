@@ -21,7 +21,9 @@ async function getObjectFromUrl(){
     const obj = await getObjectFromUrl(url);
     console.log(JSON.stringify(obj, null, 2));
 }
+```
 
+```ts
 // Example: from a string
 const string = `
 FILER:
