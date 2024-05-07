@@ -85,25 +85,24 @@ function badYamlToObj(text: string) {
   return obj;
 }
 
-
 /**
  * normalize keys to known types
  * @param obj
  * @returns
-*/
+ */
 function normalizeKnownKeysAsAppropriateDataTypes(obj: IndexedObject) {
   // Recursive function to iterate over all keys and child keys
   function recurse(obj: IndexedObject) {
     for (const key in obj) {
       if (Array.isArray(obj[key])) {
         // If the value is an array, recursively call the function for each element
-        obj[key] = (obj[key]as IndexedObject[]).map((item: IndexedObject) => {
-          if (typeof item === 'object') {
+        obj[key] = (obj[key] as IndexedObject[]).map((item: IndexedObject) => {
+          if (typeof item === "object") {
             return recurse(item);
-          } 
+          }
           return item;
         });
-      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+      } else if (typeof obj[key] === "object" && obj[key] !== null) {
         // If the value is an object, recursively call the function
         obj[key] = recurse(obj[key] as IndexedObject);
       }
@@ -291,7 +290,6 @@ export async function getObjectFromString(text: string) {
   const { yamlLikeStructure, xmlLikeStructure } = trimDocument(text);
   const xmlObj = badXmlToObj(xmlLikeStructure);
   const ymlObj = parseYamlLikeString(yamlLikeStructure);
-
-  const acceptanceDateTime = text.split('\n')[2].split('>')[1].trim()
+  const acceptanceDateTime = text.split("\n")[2].split(">")[1].trim();
   return { ...ymlObj, ...xmlObj, acceptanceDateTime };
 }
