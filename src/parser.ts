@@ -1,7 +1,7 @@
 import * as yaml from "yaml";
 const { XMLParser } = require("fast-xml-parser");
 
-type IndexedObject = { [k: string]: any };
+type IndexedObject = { [k: string]: string | string[] | IndexedObject| IndexedObject[] };
 
 // Function to convert a string to camelCase
 export function toCamelCase(str: string) {
@@ -66,24 +66,29 @@ function badYamlToObj(text: string) {
 
     if (key.trim()) {
       let cleanVal = val.trim();
-      if(cleanVal.trim()===''){
-        cleanVal = '';
-      }else{
-        cleanVal = ` '${val.trim()}'`
+      if (cleanVal.trim() === "") {
+        cleanVal = "";
+      } else {
+        cleanVal = ` '${val.trim()}'`;
       }
       cleaned = `${key}__${i}:${cleanVal}`;
     }
-
     normalizedYaml += `${cleaned}\n`;
     i++;
   }
-
+  
   let obj = yaml.parse(normalizedYaml);
   obj = camelizeKeys(obj);
 
   return obj;
 }
+function normalizeKnownKeysAsAppropriateDataTypes(obj:IndexedObject){
+  if(obj.filer && !Array.isArray(obj.filer)) {
+    obj.filer = [obj.filer] as IndexedObject[];
+  }
 
+  return obj;
+}
 /**
  * Removes numbered keys from the provided object recursively.
  * @param {object} obj - The object from which numbered keys should be removed.
@@ -99,9 +104,9 @@ function recursivelyFlattenDuplicateKeysWithNumbers(obj: IndexedObject) {
         // Check if the object has the new key
         if (!Array.isArray(obj[newKey])) {
           // Check if the value of the new key is not an array
-          obj[newKey] = [obj[newKey]]; // Convert the value to an array
+          obj[newKey] = [obj[newKey]] as IndexedObject[]; // Convert the value to an array
         }
-        obj[newKey].push(obj[key]); // Push the value of the original key to the array
+        (obj[newKey] as IndexedObject[]).push(obj[key] as IndexedObject); // Push the value of the original key to the array
         delete obj[key]; // Delete the original key-value pair
       } else {
         obj[newKey] = obj[key]; // Set the value of the new key to the value of the original key
@@ -110,11 +115,11 @@ function recursivelyFlattenDuplicateKeysWithNumbers(obj: IndexedObject) {
     }
     if (typeof obj[newKey] === "object" && obj[newKey] !== null) {
       // Check if the value of the new key is an object
-      recursivelyFlattenDuplicateKeysWithNumbers(obj[newKey]); // Recursively traverse nested objects
+      recursivelyFlattenDuplicateKeysWithNumbers(obj[newKey] as IndexedObject); // Recursively traverse nested objects
     }
     if (Array.isArray(obj[newKey])) {
       // Check if the value of the new key is an array
-      obj[newKey] = obj[newKey].map(recursivelyFlattenDuplicateKeysWithNumbers); // Recursively traverse nested arrays
+      obj[newKey] = (obj[newKey] as IndexedObject[]).map(recursivelyFlattenDuplicateKeysWithNumbers); // Recursively traverse nested arrays
     }
   }
   return obj; // Return the modified object
@@ -127,8 +132,12 @@ function recursivelyFlattenDuplicateKeysWithNumbers(obj: IndexedObject) {
  * @private
  */
 export function parseYamlLikeString(text: string) {
-  const obj = badYamlToObj(text); // first pass, just create an valid object
-  return recursivelyFlattenDuplicateKeysWithNumbers(obj); // second pass, clean up the object.
+  let obj = badYamlToObj(text); // first pass, just create an valid object
+
+  obj = recursivelyFlattenDuplicateKeysWithNumbers(obj); // second pass, clean up the object.
+  obj = normalizeKnownKeysAsAppropriateDataTypes(obj)
+
+  return obj
 }
 
 export function badXmlToObj(xmlString: string) {
@@ -197,11 +206,11 @@ function camelizeKeys<T>(obj: T): T {
   for (const key in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, key)) {
       const camelCaseKey = toCamelCase(key);
-      newObj[camelCaseKey] = camelizeKeys(obj[key]);
+      newObj[camelCaseKey] = camelizeKeys<IndexedObject>(obj[key] as IndexedObject);
     }
   }
 
-  return newObj as any;
+  return newObj as T;
 }
 
 export function trimDocument(file: string) {

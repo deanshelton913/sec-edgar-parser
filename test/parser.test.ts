@@ -15,11 +15,12 @@ const docs = numericallySortedFiles.map((file) => {
 describe("SEC EDGAR Parser", () => {
   test("Properly parses document 0", async () => {
     const res = await parser.getObjectFromString(docs[0]);
-    expect(res.filer.companyData.companyConformedName).toEqual(
+    expect(res.filer[0].companyData.companyConformedName).toEqual(
       "MJ Holdings, Inc.",
     );
-    expect(res.filer.filingValues.formType).toEqual("8-K");
+    expect(res.filer[0].filingValues.formType).toEqual("8-K");
   });
+
   test("Properly parses document 1", async () => {
     const res = await parser.getObjectFromString(docs[1]);
     expect(typeof res.issuer).toBe("object");
@@ -28,9 +29,9 @@ describe("SEC EDGAR Parser", () => {
 
   test("Properly parses document 2", async () => {
     const res = await parser.getObjectFromString(docs[2]);
-    expect(res.filer.companyData.irsNumber).toBe('000000000');
+    expect(res.filer[0].companyData.irsNumber).toBe('000000000');
   });
-  
+
   test("Properly parses document 3", async () => {
     const obj = await parser.getObjectFromString(docs[3]);
 
@@ -38,6 +39,6 @@ describe("SEC EDGAR Parser", () => {
       obj.seriesAndClassesContractsData.existingSeriesAndClassesContracts.series
         .length,
     ).toBe(2);
-    expect(obj.filer.businessAddress.state).toBe("WI");
+    expect(obj.filer[0].businessAddress.state).toBe("WI");
   });
 });
