@@ -21,6 +21,12 @@ describe("SEC EDGAR Parser", () => {
     expect(res.filer[0].filingValues.formType).toEqual("8-K");
   });
 
+  test("includes ACCEPTANCE-DATETIME", async () => {
+    const res = await parser.getObjectFromString(docs[0]);
+    expect(res.acceptanceDateTime).toEqual("20180425093712");
+    expect(res.filer[0].filingValues.formType).toEqual("8-K");
+  });
+
   test("Properly parses document 1", async () => {
     const res = await parser.getObjectFromString(docs[1]);
     expect(typeof res.issuer).toBe("object");
