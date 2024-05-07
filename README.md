@@ -22,7 +22,7 @@ async function getObjectFromUrl(){
     console.log(JSON.stringify(obj, null, 2));
 }
 ```
-
+Example:
 ```ts
 // Example: from a string
 const string = `
