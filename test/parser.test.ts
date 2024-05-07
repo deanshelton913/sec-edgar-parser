@@ -25,6 +25,12 @@ describe("SEC EDGAR Parser", () => {
     expect(typeof res.issuer).toBe("object");
     expect(res.reportingOwner.ownerData.organizationName).toBe(null);
   });
+
+  test("Properly parses document 2", async () => {
+    const res = await parser.getObjectFromString(docs[2]);
+    expect(res.filer.companyData.irsNumber).toBe('000000000');
+  });
+  
   test("Properly parses document 3", async () => {
     const obj = await parser.getObjectFromString(docs[3]);
 

@@ -12,6 +12,11 @@
     "build": "tsc",
     "test": "rm -rf ./dist && jest"
   },
+  "release": {
+    "branches": [
+      "main"
+    ]
+  },
   "keywords": [
     "SEC",
     "EDGAR"
@@ -21,6 +26,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.7.2",
     "@jest/globals": "^29.7.0",
+    "@semantic-release/github": "^10.0.3",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.8",
     "jest": "^29.7.0",

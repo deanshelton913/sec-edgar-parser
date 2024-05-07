@@ -61,10 +61,17 @@ function badYamlToObj(text: string) {
 
   for (const line of lines) {
     let cleaned = removeNSpaces(line, depthOfFirstLine);
+
     const [key, val] = line.split(":");
 
     if (key.trim()) {
-      cleaned = `${key}__${i}:${val}`;
+      let cleanVal = val.trim();
+      if(cleanVal.trim()===''){
+        cleanVal = '';
+      }else{
+        cleanVal = ` '${val.trim()}'`
+      }
+      cleaned = `${key}__${i}:${cleanVal}`;
     }
 
     normalizedYaml += `${cleaned}\n`;
@@ -121,9 +128,7 @@ function recursivelyFlattenDuplicateKeysWithNumbers(obj: IndexedObject) {
  */
 export function parseYamlLikeString(text: string) {
   const obj = badYamlToObj(text); // first pass, just create an valid object
-  //   console.log(JSON.stringify(obj, null, 2))
-  const x = recursivelyFlattenDuplicateKeysWithNumbers(obj); // second pass, clean up the object.
-  return x;
+  return recursivelyFlattenDuplicateKeysWithNumbers(obj); // second pass, clean up the object.
 }
 
 export function badXmlToObj(xmlString: string) {
@@ -184,7 +189,7 @@ function camelizeKeys<T>(obj: T): T {
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item: any) => camelizeKeys(item)) as any;
+    return obj.map((item: keyof T) => camelizeKeys(item)) as T;
   }
 
   const newObj: IndexedObject = {};
