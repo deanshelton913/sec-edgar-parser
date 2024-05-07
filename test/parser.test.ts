@@ -26,7 +26,7 @@ describe("SEC EDGAR Parser", () => {
     expect(res.acceptanceDateTime).toEqual("20180425093712");
     expect(res.filer[0].filingValues.formType).toEqual("8-K");
   });
-  test.only("handles apostrophes", async () => {
+  test("handles apostrophes", async () => {
     const res = await parser.getObjectFromString(docs[4]);
     expect(res.filer[0].companyData.companyConformedName).toBe("Advisors' Inner Circle Fund III");
 
