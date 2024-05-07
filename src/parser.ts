@@ -85,17 +85,46 @@ function badYamlToObj(text: string) {
   return obj;
 }
 
+
 /**
  * normalize keys to known types
- * @param obj 
- * @returns 
- */
+ * @param obj
+ * @returns
+*/
 function normalizeKnownKeysAsAppropriateDataTypes(obj: IndexedObject) {
-  if (obj.filer && !Array.isArray(obj.filer)) {
-    obj.filer = [obj.filer] as IndexedObject[];
+  // Recursive function to iterate over all keys and child keys
+  function recurse(obj: IndexedObject) {
+    for (const key in obj) {
+      if (Array.isArray(obj[key])) {
+        // If the value is an array, recursively call the function for each element
+        obj[key] = (obj[key]as IndexedObject[]).map((item: IndexedObject) => {
+          if (typeof item === 'object') {
+            return recurse(item);
+          } 
+          return item;
+        });
+      } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+        // If the value is an object, recursively call the function
+        obj[key] = recurse(obj[key] as IndexedObject);
+      }
+      if (repeatableValues.includes(key) && !Array.isArray(obj[key])) {
+        obj[key] = [obj[key]] as IndexedObject[];
+      }
+    }
+    return obj;
   }
 
-  return obj;
+  const repeatableValues = [
+    "filer",
+    "references429",
+    "itemInformation",
+    "groupMembers",
+    "absAssetClass",
+    "absSubAssetClass",
+    "formerCompany",
+  ];
+
+  return recurse(obj);
 }
 /**
  * Removes numbered keys from the provided object recursively.
