@@ -84,6 +84,12 @@ function badYamlToObj(text: string) {
 
   return obj;
 }
+
+/**
+ * normalize keys to known types
+ * @param obj 
+ * @returns 
+ */
 function normalizeKnownKeysAsAppropriateDataTypes(obj: IndexedObject) {
   if (obj.filer && !Array.isArray(obj.filer)) {
     obj.filer = [obj.filer] as IndexedObject[];
