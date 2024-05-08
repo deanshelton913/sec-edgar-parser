@@ -287,7 +287,6 @@ export async function getObjectFromUrl(url: string) {
 }
 
 export async function getObjectFromString(text: string) {
-  console.log(text);
   const { yamlLikeStructure, xmlLikeStructure } = trimDocument(text);
   const xmlObj = badXmlToObj(xmlLikeStructure);
   const ymlObj = parseYamlLikeString(yamlLikeStructure);
