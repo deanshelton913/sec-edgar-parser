@@ -290,6 +290,7 @@ export async function getObjectFromString(text: string) {
   const { yamlLikeStructure, xmlLikeStructure } = trimDocument(text);
   const xmlObj = badXmlToObj(xmlLikeStructure);
   const ymlObj = parseYamlLikeString(yamlLikeStructure);
+
   const acceptanceDateTime = text.split("\n")[2].split(">")[1].trim();
-  return { ...ymlObj, ...xmlObj, acceptanceDateTime };
+  return { acceptanceDateTime, ...ymlObj, ...xmlObj };
 }
