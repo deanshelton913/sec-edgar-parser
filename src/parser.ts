@@ -276,13 +276,13 @@ export function trimDocument(file: string) {
   return { yamlLikeStructure, xmlLikeStructure };
 }
 
-async function callTheSEC(url: string) {
-  const fileResponse = await fetch(url);
+async function callTheSEC(url: string, userAgent: string ) {
+  const fileResponse = await fetch(url, { headers: { "user-agent": userAgent } })
   return fileResponse.text();
 }
 
-export async function getObjectFromUrl(url: string) {
-  const doc = await callTheSEC(url);
+export async function getObjectFromUrl(url: string, userAgent = '') {
+  const doc = await callTheSEC(url, userAgent);
   return getObjectFromString(doc);
 }
 
