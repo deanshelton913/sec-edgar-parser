@@ -286,6 +286,11 @@ async function callTheSEC(url: string, userAgent: string) {
   const fileResponse = await fetch(url, {
     headers: { "user-agent": userAgent },
   });
+  if (fileResponse.status === 403) {
+    throw new Error(
+      "FORBIDDEN. SEC rejected the request. Make sure you are using a user agent that identifies yourself.",
+    );
+  }
   return fileResponse.text();
 }
 
