@@ -5,7 +5,8 @@ import {
 } from "./parser";
 
 const urls = [
-  "https://www.sec.gov/Archives/edgar/data/1614199/000110465924058302/0001104659-24-058302.txt",
+  "https://www.sec.gov/Archives/edgar/data/1766724/000117266123003414/0001172661-23-003414.txt",
+  "https://www.sec.gov/Archives/edgar/data/314169/000137647423000077/0001376474-23-000077.txt",
 ];
 
 function getLastSegmentWithoutExtension(urlString: string) {

@@ -6,7 +6,7 @@ This small library was built to parse those edgar formatted documents like those
 ### Be advised
 1. The SEC archive does enforce IP based rate limiting (currently set at ten requests per second) so when you request these docs, remember to account for this delay. 
 2. All leaf values in the resulting JS object are represented as STRINGs to help preserve the document intent. For example, some numeric or date values might contain leading zeros (ex: `000123123`) in the event these leading zeroes are references to other documents, their values are unaltered.
-
+3. This might not handle 100% of SEC document formats laid out in the [PDS Dissemination Specification](https://www.sec.gov/files/edgar/pds_dissemination_spec.pdf). If you find a document that is not being parsed correctly, please open an issue and I will try to fix it.
 
 
 ## Example
