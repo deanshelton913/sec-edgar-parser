@@ -28,18 +28,19 @@ describe("SEC EDGAR Parser", () => {
   });
   test("handles apostrophes", async () => {
     const res = await parser.getObjectFromString(docs[4]);
-    expect(res.filer[0].companyData.companyConformedName).toBe("Advisors' Inner Circle Fund III");
-
+    expect(res.filer[0].companyData.companyConformedName).toBe(
+      "Advisors' Inner Circle Fund III",
+    );
   });
   test("Properly parses document 1", async () => {
     const res = await parser.getObjectFromString(docs[1]);
     expect(typeof res.issuer).toBe("object");
-    expect(res.reportingOwner.ownerData.organizationName).toBe(null);
+    expect(res.reportingOwner[0].ownerData.organizationName).toBe(null);
   });
 
   test("Properly parses document 2", async () => {
     const res = await parser.getObjectFromString(docs[2]);
-    expect(res.filer[0].companyData.irsNumber).toBe('000000000');
+    expect(res.filer[0].companyData.irsNumber).toBe("000000000");
   });
 
   test("Properly parses document 3", async () => {
@@ -50,5 +51,15 @@ describe("SEC EDGAR Parser", () => {
         .length,
     ).toBe(2);
     expect(obj.filer[0].businessAddress.state).toBe("WI");
+  });
+
+  test("Properly parses document 4", async () => {
+    const obj = await parser.getObjectFromString(docs[4]);
+
+    expect(
+      obj.seriesAndClassesContractsData.existingSeriesAndClassesContracts.series
+        .length,
+    ).toBe(9);
+    expect(obj.filer[0].businessAddress.state).toBe("PA");
   });
 });

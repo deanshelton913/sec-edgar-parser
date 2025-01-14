@@ -67,7 +67,7 @@ function badYamlToObj(text: string) {
     const [key, val] = line.split(":");
 
     if (key.trim()) {
-      let cleanVal = val.trim().replace(`'`,`''`);
+      let cleanVal = val.trim().replace(`'`, `''`);
       if (cleanVal.trim() === "") {
         cleanVal = "";
       } else {
@@ -114,6 +114,12 @@ function normalizeKnownKeysAsAppropriateDataTypes(obj: IndexedObject) {
   }
 
   const repeatableValues = [
+    "filedBy",
+    "serialCompany",
+    "subjectCompany",
+    "reportingOwner",
+    "issuer",
+    "filedFor",
     "filer",
     "references429",
     "itemInformation",
@@ -276,12 +282,14 @@ export function trimDocument(file: string) {
   return { yamlLikeStructure, xmlLikeStructure };
 }
 
-async function callTheSEC(url: string, userAgent: string ) {
-  const fileResponse = await fetch(url, { headers: { "user-agent": userAgent } })
+async function callTheSEC(url: string, userAgent: string) {
+  const fileResponse = await fetch(url, {
+    headers: { "user-agent": userAgent },
+  });
   return fileResponse.text();
 }
 
-export async function getObjectFromUrl(url: string, userAgent = '') {
+export async function getObjectFromUrl(url: string, userAgent = "") {
   const doc = await callTheSEC(url, userAgent);
   return getObjectFromString(doc);
 }
