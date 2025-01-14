@@ -1,8 +1,11 @@
 import fs from "node:fs/promises";
-import { getObjectFromUrl, getObjectFromString as _getObjectFromString} from "./parser";
+import {
+  getObjectFromUrl,
+  getObjectFromString as _getObjectFromString,
+} from "./parser";
 
 const urls = [
-  "https://www.sec.gov/Archives/edgar/data/1614199/000110465924058302/0001104659-24-058302.txt"
+  "https://www.sec.gov/Archives/edgar/data/1614199/000110465924058302/0001104659-24-058302.txt",
 ];
 
 function getLastSegmentWithoutExtension(urlString: string) {
@@ -17,10 +20,18 @@ function getLastSegmentWithoutExtension(urlString: string) {
   const promises = [];
   for (let index = 0; index < urls.length; index++) {
     const url = urls[index];
+    const email = process.argv[2];
+
+    if (!email || !email.includes("@")) {
+      throw new Error(
+        "Please provide a valid email address as a command line argument",
+      );
+    }
+
     const promise = (async (url) => {
       console.log(`Calling: ${url}`);
       const accessionNumber = getLastSegmentWithoutExtension(url);
-      const obj = await getObjectFromUrl(url);
+      const obj = await getObjectFromUrl(url, email);
       const outputPath = `/tmp/SEC-output-${accessionNumber}.json`;
       await fs.writeFile(outputPath, JSON.stringify(obj, null, 2), "utf-8");
       console.log(`output: ${outputPath}`);
