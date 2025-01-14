@@ -1,4 +1,4 @@
-# SEC EDGAR parser
+# SEC EDGAR Parser
 If you have ever wished that the SEC archive documents were in a more usable format, this tool is for you.
 
 This small library was built to parse those edgar formatted documents like those found at [the SEC archive website](https://www.sec.gov/Archives/edgar/data/1849440/000084251724000086/0000842517-24-000086.txt) into a usable JS object.
