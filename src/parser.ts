@@ -304,6 +304,9 @@ export async function getObjectFromString(text: string) {
   const xmlObj = badXmlToObj(xmlLikeStructure);
   const ymlObj = parseYamlLikeString(yamlLikeStructure);
 
-  const acceptanceDateTime = text.split("\n")[2].split(">")[1].trim();
-  return { acceptanceDateTime, ...ymlObj, ...xmlObj };
+  const acceptanceDatetimeMatch = text.match(/<ACCEPTANCE-DATETIME>(\d+)/);
+  const acceptanceDatetime = acceptanceDatetimeMatch
+    ? acceptanceDatetimeMatch[1]
+    : "";
+  return { acceptanceDatetime, ...ymlObj, ...xmlObj };
 }
