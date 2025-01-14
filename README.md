@@ -85,7 +85,7 @@ console.log(JSON.stringify(getObjectFromString(string), null, 2))
 ### Example output
 ```json
 {
-  "acceptanceDateTime": "20240507212710",
+  "acceptanceDatetime": "20240507212710",
   "accessionNumber": "0001104659-24-058302",
   "conformedSubmissionType": "4",
   "publicDocumentCount": "1",
