@@ -20,9 +20,24 @@ This function calls the SEC, and immediately parses the document into an object.
 ```ts
 import { getObjectFromUrl, getObjectFromString } from "sec-edgar-parser";
 
-const url = 'https://www.sec.gov/Archives/edgar/data/1456857/000151116418000283/0001511164-18-000283.txt';
-const obj = await getObjectFromUrl(url);
+const url = 'https://www.sec.gov/Archives/edgar/data/1614199/000110465924058302/0001104659-24-058302.txt';
+const obj = await getObjectFromUrl(url, 'myEmailAddress@gmail.com');
 console.log(JSON.stringify(obj, null, 2));
+```
+
+## Example `main.ts`
+Add as many urls as you want to the `urls` array in `src/main.ts`.
+
+Remember to include your email address as a command line argument.
+
+```bash
+ts-node ./src/main.ts myEmailAddress@gmail.com
+```
+Example output:
+
+```bash
+Calling: https://www.sec.gov/Archives/edgar/data/1614199/000110465924058302/0001104659-24-058302.txt
+output: /tmp/SEC-output-0001104659-24-058302.json
 ```
 
 ## Example `getObjectFromString`
@@ -30,23 +45,36 @@ This function processes SEC filing documents from a string.
 ```ts
 // Example: from a string
 const string = `
-<SEC-DOCUMENT>0001511164-18-000283.txt : 20180425
-<SEC-HEADER>0001511164-18-000283.hdr.sgml : 20180425
-<ACCEPTANCE-DATETIME>20180425093712
-ACCESSION NUMBER:		0001511164-18-000283
-CONFORMED SUBMISSION TYPE:	8-K
+<SEC-DOCUMENT>0001104659-24-058302.txt : 20240507
+<SEC-HEADER>0001104659-24-058302.hdr.sgml : 20240507
+<ACCEPTANCE-DATETIME>20240507212710
+ACCESSION NUMBER:		0001104659-24-058302
+CONFORMED SUBMISSION TYPE:	4
+PUBLIC DOCUMENT COUNT:		1
 
   <... Doc omitted for brevity ...>
 
-FILER:
+REPORTING-OWNER:	
 
-	COMPANY DATA:	
-		COMPANY CONFORMED NAME:			MJ Holdings, Inc.
-		CENTRAL INDEX KEY:			0001456857
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			Pianalto Sandra
+		CENTRAL INDEX KEY:			0001614199
+		ORGANIZATION NAME:           	
+
+	FILING VALUES:
+		FORM TYPE:		4
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	000-54863
+		FILM NUMBER:		24923992
+
+	MAIL ADDRESS:	
+		STREET 1:		1000 EATON BOULEVARD
+		CITY:			CLEVELAND
+		STATE:			OH
+		ZIP:			44122
         
   <... Doc omitted for brevity ...>
 
-end
 </TEXT>
 </DOCUMENT>
 </SEC-DOCUMENT>
@@ -57,69 +85,67 @@ console.log(JSON.stringify(getObjectFromString(string), null, 2))
 ### Example output
 ```json
 {
-  "accessionNumber": "0001839882-24-014056",
-  "acceptanceDateTime": "20240501130530",
-  "conformedSubmissionType": "FWP",
-  "publicDocumentCount": "2",
-  "filedAsOfDate": "20240501",
-  "dateAsOfChange": "20240501",
-  "subjectCompany": {
-    "companyData": {
-      "companyConformedName": "Morgan Stanley Finance LLC",
-      "centralIndexKey": "0001666268",
-      "standardIndustrialClassification": "ASSET-BACKED SECURITIES [6189]",
-      "organizationName": "Office of Structured Finance",
-      "irsNumber": "363145972",
-      "stateOfIncorporation": "DE",
-      "fiscalYearEnd": "1231"
-    },
-    "filingValues": {
-      "formType": "FWP",
-      "secAct": "1934 Act",
-      "secFileNumber": "333-275587-01",
-      "filmNumber": "24901891"
-    },
-    "businessAddress": {
-      "street1": "1585 BROADWAY",
-      "city": "NEW YORK",
-      "state": "NY",
-      "zip": "10036",
-      "businessPhone": "(212) 761-4000"
-    },
-    "mailAddress": {
-      "street1": "1585 BROADWAY",
-      "city": "NEW YORK",
-      "state": "NY",
-      "zip": "10036"
+  "acceptanceDateTime": "20240507212710",
+  "accessionNumber": "0001104659-24-058302",
+  "conformedSubmissionType": "4",
+  "publicDocumentCount": "1",
+  "conformedPeriodOfReport": "20240503",
+  "filedAsOfDate": "20240507",
+  "dateAsOfChange": "20240507",
+  "reportingOwner": [
+    {
+      "ownerData": {
+        "companyConformedName": "Pianalto Sandra",
+        "centralIndexKey": "0001614199",
+        "organizationName": null
+      },
+      "filingValues": {
+        "formType": "4",
+        "secAct": "1934 Act",
+        "secFileNumber": "000-54863",
+        "filmNumber": "24923992"
+      },
+      "mailAddress": {
+        "street1": "1000 EATON BOULEVARD",
+        "city": "CLEVELAND",
+        "state": "OH",
+        "zip": "44122"
+      }
     }
-  },
-  "filedBy": {
-    "companyData": {
-      "companyConformedName": "Morgan Stanley Finance LLC",
-      "centralIndexKey": "0001666268",
-      "standardIndustrialClassification": "ASSET-BACKED SECURITIES [6189]",
-      "organizationName": "Office of Structured Finance",
-      "irsNumber": "363145972",
-      "stateOfIncorporation": "DE",
-      "fiscalYearEnd": "1231"
-    },
-    "filingValues": {
-      "formType": "FWP"
-    },
-    "businessAddress": {
-      "street1": "1585 BROADWAY",
-      "city": "NEW YORK",
-      "state": "NY",
-      "zip": "10036",
-      "businessPhone": "(212) 761-4000"
-    },
-    "mailAddress": {
-      "street1": "1585 BROADWAY",
-      "city": "NEW YORK",
-      "state": "NY",
-      "zip": "10036"
+  ],
+  "issuer": [
+    {
+      "companyData": {
+        "companyConformedName": "Eaton Corp plc",
+        "centralIndexKey": "0001551182",
+        "standardIndustrialClassification": "MISC INDUSTRIAL & COMMERCIAL MACHINERY & EQUIPMENT [3590]",
+        "organizationName": "06 Technology",
+        "irsNumber": "981059235",
+        "fiscalYearEnd": "1231"
+      },
+      "businessAddress": {
+        "street1": "30 PEMBROKE ROAD",
+        "street2": "EATON HOUSE",
+        "city": "DUBLIN",
+        "state": "L2",
+        "zip": "DUBLIN 4",
+        "businessPhone": "353 1637 2900"
+      },
+      "mailAddress": {
+        "street1": "30 PEMBROKE ROAD",
+        "street2": "EATON HOUSE",
+        "city": "DUBLIN",
+        "state": "L2",
+        "zip": "DUBLIN 4"
+      },
+      "formerCompany": [
+        {
+          "formerConformedName": "Eaton Corp Ltd",
+          "dateOfNameChange": "20120530"
+        }
+      ]
     }
-  }
+  ]
 }
 ```
 
