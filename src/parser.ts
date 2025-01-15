@@ -287,7 +287,6 @@ export function trimDocument(file: string) {
   const yamlLikeStructure = fileLines
     .slice(startOfYamlContent, endOfYamlLikeContent)
     .join("\n");
-  console.log({ yamlLikeStructure });
   const xmlLikeStructure = `<SEC-HEADER>
   ${fileLines.slice(endOfYamlLikeContent, endOfXMLindex + 1).join("\n")}`;
 
