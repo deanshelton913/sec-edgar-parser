@@ -263,7 +263,15 @@ export function trimDocument(file: string) {
   const fileLines = file.split("\n");
   let endOfYamlLikeContent = 0;
   let endOfXMLindex = 0;
-  for (let i = 3; i < fileLines.length; i++) {
+  let startOfYamlContent = 0;
+  for (let i = 0; i < fileLines.length; i++) {
+    if (fileLines[i].trim().includes("ACCESSION NUMBER:")) {
+      startOfYamlContent = i;
+      break;
+    }
+  }
+
+  for (let i = startOfYamlContent; i < fileLines.length; i++) {
     if (fileLines[i].trim().startsWith("<")) {
       endOfYamlLikeContent = i; // Return the index of the line
       break;
@@ -275,7 +283,11 @@ export function trimDocument(file: string) {
       break;
     }
   }
-  const yamlLikeStructure = fileLines.slice(3, endOfYamlLikeContent).join("\n");
+
+  const yamlLikeStructure = fileLines
+    .slice(startOfYamlContent, endOfYamlLikeContent)
+    .join("\n");
+  console.log({ yamlLikeStructure });
   const xmlLikeStructure = `<SEC-HEADER>
   ${fileLines.slice(endOfYamlLikeContent, endOfXMLindex + 1).join("\n")}`;
 
