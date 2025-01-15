@@ -78,6 +78,7 @@ describe("SEC EDGAR Parser", () => {
     expect(obj.filer[0].businessAddress.state).toBe("K3");
     expect(obj).toEqual({
       acceptanceDatetime: "20231016165638",
+      accessionNumber: "0001172661-23-003414",
       conformedPeriodOfReport: "20230930",
       conformedSubmissionType: "13F-HR",
       dateAsOfChange: "20231016",
