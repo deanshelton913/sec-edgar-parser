@@ -259,7 +259,7 @@ function camelizeKeys<T>(obj: T): T {
   return newObj as T;
 }
 
-export function trimDocument(file: string) {
+export function splitDocumentIntoYmlAndXML(file: string) {
   const fileLines = file.split("\n");
   let endOfYamlLikeContent = 0;
   let endOfXMLindex = 0;
@@ -311,7 +311,8 @@ export async function getObjectFromUrl(url: string, userAgent = "") {
 }
 
 export async function getObjectFromString(text: string) {
-  const { yamlLikeStructure, xmlLikeStructure } = trimDocument(text);
+  const { yamlLikeStructure, xmlLikeStructure } =
+    splitDocumentIntoYmlAndXML(text);
   const xmlObj = badXmlToObj(xmlLikeStructure);
   const ymlObj = parseYamlLikeString(yamlLikeStructure);
 
