@@ -67,7 +67,8 @@ function badYamlToObj(text: string) {
     const [key, val] = line.split(":");
 
     if (key.trim()) {
-      let cleanVal = val.trim().replace(`'`, `''`);
+      let cleanVal = val.trim().replace(/'/g, "''");
+
       if (cleanVal.trim() === "") {
         cleanVal = "";
       } else {
@@ -75,14 +76,14 @@ function badYamlToObj(text: string) {
       }
       cleaned = `${key}__${i}:${cleanVal}`;
     }
+
     normalizedYaml += `${cleaned}\n`;
     i++;
   }
 
-  let obj = yaml.parse(normalizedYaml);
-  obj = camelizeKeys(obj);
+  const obj = yaml.parse(normalizedYaml);
 
-  return obj;
+  return camelizeKeys(obj);
 }
 
 /**
