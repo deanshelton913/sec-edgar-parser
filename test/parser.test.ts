@@ -117,4 +117,11 @@ describe("SEC EDGAR Parser", () => {
       publicDocumentCount: "2",
     });
   });
+
+  test("Properly parses document 7", async () => {
+    const obj = await parser.getObjectFromString(docs[7]);
+
+    expect(obj.filer[0].businessAddress.street1).toBe("26 SE'ADYA GA'ON");
+    expect(obj.filer[0].mailAddress.street1).toBe("26 SE'ADYA GA'ON");
+  });
 });
