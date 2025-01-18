@@ -32,6 +32,13 @@ export class Form4Service extends BaseFilingService<
     return issuerNameMatch ? issuerNameMatch[1] : "";
   }
 
+  protected extractCusip(
+    _parsedDocument: Form4Data,
+    _documentText: string,
+  ): string | null {
+    return null;
+  }
+
   /**
    * Adds some unique form4 fields to the parsed document.
    * @param documentText - The text of the document to parse.

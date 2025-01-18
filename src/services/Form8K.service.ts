@@ -22,11 +22,37 @@ export class Form8KService extends BaseFilingService<
   ParsedDocument<Form8KData>,
   Form8KData
 > {
+  /**
+   * Extracts company trading symbol from document text using regex patterns
+   */
+  protected extractTradingSymbol(
+    _parsedDocument: Form8KData,
+    documentText: string,
+  ): string | null {
+    const patterns = [/\(OTC:\s*([A-Z]+)\)/i];
+
+    for (const pattern of patterns) {
+      const match = documentText.match(pattern);
+      if (match?.[1]) {
+        return match[1].trim();
+      }
+    }
+
+    return null;
+  }
+
   protected getFilingAgent(
     parsedDoc: Form8KData,
     _documentText: string,
   ): string {
     return parsedDoc.filer[0].companyData.companyConformedName;
+  }
+
+  protected extractCusip(
+    _parsedDocument: Form8KData,
+    _documentText: string,
+  ): string | null {
+    return null;
   }
 
   /**

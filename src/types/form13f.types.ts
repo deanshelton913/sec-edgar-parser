@@ -1,4 +1,6 @@
-export interface Form13FFiling {
+import type { ConsistentDocumentFields } from "./filing-output";
+
+export interface Form13FFiling extends ConsistentDocumentFields {
   // Document Header Fields
   acceptanceDatetime: string; // ACCEPTANCE-DATETIME
   secDocument: string; // SEC-DOCUMENT
@@ -9,58 +11,100 @@ export interface Form13FFiling {
   filingDate: string; // FILED-DATE
   filmNumber: string; // FILM-NUMBER
   type: "13F-HR" | "13F-NT" | "13F-HR/A" | "13F-NT/A"; // TYPE
-  publicDocumentCount: number; // PUBLIC-DOCUMENT-COUNT
-
-  // Filer Information
-  filerInfo: {
-    cik: string; // FILER CIK
-    irsNumber?: string; // IRS-NUMBER
-    name: string; // COMPANY CONFORMED NAME
-    fileNumber: string; // FILE-NUMBER
-    stateOfIncorporation: string; // STATE OF INCORPORATION
-    fiscalYearEnd: string; // FISCAL-YEAR-END
-    businessAddress: {
-      street1: string;
-      street2?: string;
-      city: string;
-      state: string;
-      zipCode: string;
-      businessPhone: string;
+  publicDocumentCount: string; // PUBLIC-DOCUMENT-COUNT
+  edgarSubmission: {
+    headerData: {
+      submissionType: string;
+      filerInfo: {
+        cik: string; // FILER CIK
+        irsNumber?: string; // IRS-NUMBER
+        name: string; // COMPANY CONFORMED NAME
+        fileNumber: string; // FILE-NUMBER
+        stateOfIncorporation: string; // STATE OF INCORPORATION
+        fiscalYearEnd: string; // FISCAL-YEAR-END
+        businessAddress: {
+          street1: string;
+          street2?: string;
+          city: string;
+          state: string;
+          zipCode: string;
+          businessPhone: string;
+        };
+      };
+    };
+    formData: {
+      coverPage: {
+        reportCalendarOrQuarter: string;
+        isAmendment: boolean;
+        amendmentNumber?: number; // AMENDMENT NUMBER
+        filingManager: {
+          name: string;
+          address: {
+            street1: string;
+            city: string;
+            stateOrCountry: string;
+            zipCode: string;
+          };
+        };
+        reportType:
+          | "13F HOLDINGS REPORT"
+          | "13F NOTICE"
+          | "13F COMBINATION REPORT";
+        form13FFileNumber: string;
+        crdNumber: string;
+        secFileNumber: string;
+        provideInfoForInstruction5: string;
+      };
+      signatureBlock: {
+        name: string;
+        title: string;
+        phone: string;
+        signature: string;
+        city: string;
+        stateOrCountry: string;
+        signatureDate: string;
+      };
+      summaryPage: {
+        otherIncludedManagersCount: number;
+        tableEntryTotal: number;
+        tableValueTotal: number;
+      };
     };
   };
-
-  // Form-Specific Content
-  reportCalendarPeriod: string; // CONFORMED PERIOD OF REPORT
-  reportType: "13F HOLDINGS REPORT" | "13F NOTICE" | "13F COMBINATION REPORT";
-  isAmendment: boolean;
-  amendmentNumber?: number; // AMENDMENT NUMBER
-  amendmentDescription?: string;
-  confidentialOmitted: boolean; // Whether confidential information has been omitted
-  holdings: Form13FHolding[];
-  totalHoldingsValue: number; // in thousands of dollars
-
-  // Footer Information
-  signatureName: string; // SIGNATURE-NAME
-  signatureDate: string; // SIGNATURE-DATE
-  signatureTitle: string; // SIGNATURE-TITLE
+  infoTable: {
+    nameOfIssuer: string;
+    titleOfClass: string;
+    cusip: string;
+    value: number;
+    shrsOrPrnAmt: {
+      sshPrnamt: number;
+      sshPrnamtType: "SH" | "PRN"; // SH = Shares, PRN = Principal Amount
+    };
+    investmentDiscretion: "SOLE" | "SHARED" | "NONE";
+    votingAuthority: {
+      Sole: number;
+      Shared: number;
+      None: number;
+    };
+  };
 }
 
-interface Form13FHolding {
-  nameOfIssuer: string;
-  titleOfClass: string;
-  cusip: string;
-  value: number; // in thousands of dollars
-  sharesOrPrincipalAmount: {
-    amount: number;
-    type: "SH" | "PRN"; // SH = Shares, PRN = Principal Amount
-  };
-  investmentDiscretion: "SOLE" | "SHARED" | "NONE";
-  votingAuthority: {
-    sole: number;
-    shared: number;
-    none: number;
-  };
-  putCall?: "PUT" | "CALL"; // Only for options
-  otherManager?: string; // Reference to other manager if shared investment discretion
-  confidentialOmitted?: boolean; // Indicates if confidential info is omitted for this holding
-}
+// interface Form13FHolding {
+//   nameOfIssuer: string;
+//   titleOfClass: string;
+//   cusip: string;
+//   value: number; // in thousands of dollars
+//   sharesOrPrincipalAmount: {
+//     amount: number;
+//     type: "SH" | "PRN"; // SH = Shares, PRN = Principal Amount
+//   };
+//   investmentDiscretion: "SOLE" | "SHARED" | "NONE";
+//   votingAuthority: {
+//     sole: number;
+//     shared: number;
+//     none: number;
+//   };
+//   putCall?: "PUT" | "CALL"; // Only for options
+//   otherManager?: string; // Reference to other manager if shared investment discretion
+//   confidentialOmitted?: boolean; // Indicates if confidential info is omitted for this holding
+// }

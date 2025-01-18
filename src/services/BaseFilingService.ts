@@ -17,6 +17,10 @@ export abstract class BaseFilingService<
    */
   protected abstract getFilingAgent(parsedDoc: A, documentText: string): string;
 
+  protected abstract extractCusip(
+    parsedDocument: A,
+    _documentText: string,
+  ): string | null;
   /**
    * Processes a document and extracts key information
    */
@@ -37,6 +41,7 @@ export abstract class BaseFilingService<
         filedAsOfDate: this.getFiledAsOfDate(parsedDocument, documentText),
         dateAsOfChange: this.getDateAsOfChange(parsedDocument, documentText),
         filingAgent: this.getFilingAgent(parsedDocument, documentText), // the person, company, or entity filing the document
+        cusip: this.extractCusip(parsedDocument, documentText), //  the cusip of the company filing the document
         tradingSymbol: this.extractTradingSymbol(parsedDocument, documentText), // the trading symbol of the company filing the document
         submissionType: this.getSubmissionType(parsedDocument, documentText), // the type of filing, e.g. 8-K, 13F, etc.
       },
@@ -55,27 +60,10 @@ export abstract class BaseFilingService<
   /**
    * Extracts company trading symbol from document text using regex patterns
    */
-  protected extractTradingSymbol(
+  protected abstract extractTradingSymbol(
     _parsedDocument: A,
     documentText: string,
-  ): string | null {
-    const patterns = [
-      /\(OTC:\s*([A-Z]+)\)/i,
-      /Trading Symbol:\s*([A-Z]+)/i,
-      /\(Trading Symbol:\s*([A-Z]+)\)/i,
-      /\(Symbol:\s*([A-Z]+)\)/i,
-      /<TR><TD[^>]*>([A-Z]{1,5})<\/TD>/i,
-    ];
-
-    for (const pattern of patterns) {
-      const match = documentText.match(pattern);
-      if (match?.[1]) {
-        return match[1].trim();
-      }
-    }
-
-    return null;
-  }
+  ): string | null;
 
   protected getAccessionNumber(parsedDoc: A, _documentText: string): string {
     return parsedDoc.accessionNumber;

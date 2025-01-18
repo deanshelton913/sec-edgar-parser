@@ -27,6 +27,7 @@ describe("Form4Service", () => {
         publicDocumentCount: "1",
         submissionType: "4",
         tradingSymbol: "ISBA",
+        cusip: null,
       },
       estimatedImpact: {
         confidence: 0.6,

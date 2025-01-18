@@ -27,6 +27,7 @@ describe("Form8KService", () => {
         submissionType: "8-K",
         publicDocumentCount: "19",
         tradingSymbol: "MJNE",
+        cusip: null,
       },
       estimatedImpact: {
         confidence: 0.5999968530698304,

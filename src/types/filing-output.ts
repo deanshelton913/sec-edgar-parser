@@ -10,6 +10,7 @@ export interface ParsedDocument<T extends ConsistentDocumentFields> {
     unixTimestamp: number;
     filingAgent: string;
     tradingSymbol: string | null;
+    cusip: string | null;
     submissionType: string;
   };
   estimatedImpact: {
