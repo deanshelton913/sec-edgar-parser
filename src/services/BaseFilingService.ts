@@ -82,26 +82,23 @@ export abstract class BaseFilingService<
   }
 
   protected getAcceptanceDatetime(parsedDoc: A, _documentText: string): number {
-    return Math.floor(
-      new Date(
-        `${parsedDoc.acceptanceDatetime.slice(
-          0,
-          4,
-        )}-${parsedDoc.acceptanceDatetime.slice(
-          4,
-          6,
-        )}-${parsedDoc.acceptanceDatetime.slice(
-          6,
-          8,
-        )} ${parsedDoc.acceptanceDatetime.slice(
-          8,
-          10,
-        )}:${parsedDoc.acceptanceDatetime.slice(
-          10,
-          12,
-        )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}`,
-      ).getTime() / 1000,
-    );
+    const dateStr = `${parsedDoc.acceptanceDatetime.slice(
+      0,
+      4,
+    )}-${parsedDoc.acceptanceDatetime.slice(
+      4,
+      6,
+    )}-${parsedDoc.acceptanceDatetime.slice(
+      6,
+      8,
+    )} ${parsedDoc.acceptanceDatetime.slice(
+      8,
+      10,
+    )}:${parsedDoc.acceptanceDatetime.slice(
+      10,
+      12,
+    )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}`;
+    return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 
   protected getPublicDocumentCount(
