@@ -85,7 +85,7 @@ export abstract class BaseFilingService<
     )}:${parsedDoc.acceptanceDatetime.slice(
       10,
       12,
-    )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}Z`;
+    )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}-04:00`; // Changed to Eastern Time
     return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 
@@ -103,7 +103,7 @@ export abstract class BaseFilingService<
     )}-${parsedDoc.filedAsOfDate.slice(4, 6)}-${parsedDoc.filedAsOfDate.slice(
       6,
       8,
-    )}T00:00:00Z`; // Append time and set to UTC
+    )}T00:00:00-04:00`; // Changed to Eastern Time
     return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 
@@ -114,7 +114,7 @@ export abstract class BaseFilingService<
     )}-${parsedDoc.dateAsOfChange.slice(4, 6)}-${parsedDoc.dateAsOfChange.slice(
       6,
       8,
-    )}T00:00:00Z`; // Append time and set to UTC
+    )}T00:00:00-04:00`; // Changed to Eastern Time
     return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 

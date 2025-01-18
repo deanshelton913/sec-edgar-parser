@@ -19,10 +19,10 @@ describe("Form4Service", () => {
 
     expect(result).toEqual({
       derived: {
-        acceptanceDatetime: 1714568842,
+        acceptanceDatetime: 1714583242,
         accessionNumber: "0000842517-24-000086",
-        dateAsOfChange: 1714521600,
-        filedAsOfDate: 1714521600,
+        dateAsOfChange: 1714536000,
+        filedAsOfDate: 1714536000,
         filingAgent: "ISABELLA BANK Corp",
         publicDocumentCount: "1",
         submissionType: "4",

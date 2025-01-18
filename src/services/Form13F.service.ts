@@ -40,7 +40,6 @@ export class Form13FHrService extends BaseFilingService<
     parsedDocument: Form13FFiling,
     _documentText: string,
   ): string | null {
-    console.log({ parsedDocument });
     return parsedDocument.infoTable.cusip;
   }
 
@@ -74,7 +73,6 @@ export class Form13FHrService extends BaseFilingService<
         parsedXml.infoTable,
       ) as unknown as Form13FFiling["infoTable"];
     }
-    console.log({ parsed });
 
     return parsed;
   }
