@@ -1,14 +1,32 @@
-// types/filing-output.ts
-export interface FilingOutput {
-  filingId: string;
-  timestamp: number;
-  companyName: string;
-  companyTicker: string | null;
-  filingType: string;
-  relatedEntities?: string[];
-  estimatedImpact?: {
-    marketImpact?: string;
-    stakeholderImpact?: string;
-    industryImpact?: string;
+export interface ParsedDocument<T extends ConsistentDocumentFields> {
+  // Common SEC filing header fields
+  derived: {
+    accessionNumber: string;
+    acceptanceDatetime: string;
+    conformedSubmissionType: string;
+    publicDocumentCount: string;
+    filedAsOfDate: string;
+    dateAsOfChange: string;
+    unixTimestamp: number;
+    filingAgent: string;
+    tradingSymbol: string | null;
+    submissionType: string;
   };
+  estimatedImpact: {
+    marketImpact: "positive" | "negative" | "neutral";
+    confidence: number;
+    totalScore: number;
+    sentiment: number;
+  };
+  parsed: T;
+}
+
+export interface ConsistentDocumentFields {
+  accessionNumber: string;
+  acceptanceDatetime: string;
+  conformedSubmissionType: string;
+  publicDocumentCount: string;
+  filedAsOfDate: string;
+  dateAsOfChange: string;
+  unixTimestamp: number;
 }

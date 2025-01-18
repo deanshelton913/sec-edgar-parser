@@ -15,7 +15,7 @@ export class Form13FService extends BaseFilingService {
       filingId: filingJson.accessionNumber,
       timestamp: new Date(filingJson.filedAt),
       companyName: filingJson.filerInfo.name,
-      filingType: "13F",
+      submissionType: "13F",
       significance: this.determineSignificance(filingJson),
       summary: this.generateSummary(keyPoints),
       keyPoints,

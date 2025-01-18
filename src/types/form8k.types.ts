@@ -1,12 +1,7 @@
-export interface Form8KFiling {
-  acceptanceDatetime: string;
-  accessionNumber: string;
-  conformedSubmissionType: string;
-  publicDocumentCount: string;
-  conformedPeriodOfReport: string;
+import type { ConsistentDocumentFields } from "./filing-output";
+
+export interface Form8KData extends ConsistentDocumentFields {
   itemInformation: string[];
-  filedAsOfDate: string;
-  dateAsOfChange: string;
   filer: Array<{
     companyData: {
       companyConformedName: string;
@@ -22,7 +17,7 @@ export interface Form8KFiling {
       secFileNumber: string;
       filmNumber: string;
     };
-    businessAddress: {
+    businessAddress?: {
       street1: string;
       street2?: string;
       city: string;
@@ -30,7 +25,7 @@ export interface Form8KFiling {
       zip: string;
       businessPhone: string;
     };
-    mailAddress: {
+    mailAddress?: {
       street1: string;
       street2?: string;
       city: string;

@@ -5,8 +5,8 @@ import { Form8KService } from "./Form8K.service";
 
 // services/filing-factory.service.ts
 export class FilingFactoryService {
-  getFilingService(filingType: string): BaseFilingService {
-    switch (filingType) {
+  getFilingService(submissionType: string): BaseFilingService {
+    switch (submissionType) {
       case "8-K":
         return new Form8KService();
       case "4":
@@ -15,7 +15,7 @@ export class FilingFactoryService {
         return new Form13FService();
       // Add other filing types
       default:
-        throw new Error(`Unsupported filing type: ${filingType}`);
+        throw new Error(`Unsupported filing type: ${submissionType}`);
     }
   }
 }
