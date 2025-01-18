@@ -91,13 +91,13 @@ export abstract class BaseFilingService<
     )}-${parsedDoc.acceptanceDatetime.slice(
       6,
       8,
-    )} ${parsedDoc.acceptanceDatetime.slice(
+    )}T${parsedDoc.acceptanceDatetime.slice(
       8,
       10,
     )}:${parsedDoc.acceptanceDatetime.slice(
       10,
       12,
-    )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}`;
+    )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}Z`;
     return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 
@@ -109,28 +109,25 @@ export abstract class BaseFilingService<
   }
 
   protected getFiledAsOfDate(parsedDoc: A, _documentText: string): number {
-    return Math.floor(
-      new Date(
-        `${parsedDoc.filedAsOfDate.slice(0, 4)}-${parsedDoc.filedAsOfDate.slice(
-          4,
-          6,
-        )}-${parsedDoc.filedAsOfDate.slice(6, 8)}`,
-      ).getTime() / 1000,
-    );
+    const dateStr = `${parsedDoc.filedAsOfDate.slice(
+      0,
+      4,
+    )}-${parsedDoc.filedAsOfDate.slice(4, 6)}-${parsedDoc.filedAsOfDate.slice(
+      6,
+      8,
+    )}T00:00:00Z`; // Append time and set to UTC
+    return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 
   protected getDateAsOfChange(parsedDoc: A, _documentText: string): number {
-    return Math.floor(
-      new Date(
-        `${parsedDoc.dateAsOfChange.slice(
-          0,
-          4,
-        )}-${parsedDoc.dateAsOfChange.slice(
-          4,
-          6,
-        )}-${parsedDoc.dateAsOfChange.slice(6, 8)}`,
-      ).getTime() / 1000,
-    );
+    const dateStr = `${parsedDoc.dateAsOfChange.slice(
+      0,
+      4,
+    )}-${parsedDoc.dateAsOfChange.slice(4, 6)}-${parsedDoc.dateAsOfChange.slice(
+      6,
+      8,
+    )}T00:00:00Z`; // Append time and set to UTC
+    return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 
   protected getSubmissionType(parsedDoc: A, _documentText: string): string {

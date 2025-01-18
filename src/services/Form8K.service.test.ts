@@ -19,7 +19,7 @@ describe("Form8KService", () => {
 
     expect(result).toEqual({
       derived: {
-        acceptanceDatetime: 1524674232,
+        acceptanceDatetime: 1524649032,
         accessionNumber: "0001511164-18-000283",
         dateAsOfChange: 1524614400,
         filedAsOfDate: 1524614400,
