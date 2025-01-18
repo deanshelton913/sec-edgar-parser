@@ -30,9 +30,9 @@ describe("Form13FHR", () => {
         cusip: "89677Q107",
       },
       estimatedImpact: {
-        confidence: 0.028595939376608523,
+        confidence: 0.02859594,
         marketImpact: "positive",
-        sentiment: 0.005037783375314861,
+        sentiment: 0.00503778,
         totalScore: 6305091,
       },
       parsed: {

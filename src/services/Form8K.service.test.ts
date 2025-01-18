@@ -30,10 +30,10 @@ describe("Form8KService", () => {
         cusip: null,
       },
       estimatedImpact: {
-        confidence: 0.5999968530698304,
-        marketImpact: "positive",
-        sentiment: 0.0001526902989606649,
-        totalScore: 0.000022903544844099735,
+        confidence: 0.59999685,
+        marketImpact: "neutral",
+        sentiment: 0.00015269,
+        totalScore: 0.0000229,
       },
       parsed: {
         acceptanceDatetime: "20180425093712",

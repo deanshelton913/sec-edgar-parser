@@ -133,17 +133,26 @@ export abstract class BaseFilingService<
     let confidence = 0.5;
 
     const { sentiment, clarity } = this.assessBaseImpact(rawDocumentText);
-
     const weight = 0.1;
-    totalScore += weight * sentiment;
-    confidence += clarity * 0.1;
+    totalScore += Number.parseFloat((weight * sentiment).toFixed(8));
+    confidence = Number.parseFloat((confidence + clarity * 0.1).toFixed(8));
 
     return {
       marketImpact:
-        totalScore > 0 ? "positive" : totalScore < 0 ? "negative" : "neutral",
-      confidence: Math.min(confidence, 1.0),
-      totalScore,
-      sentiment,
+        sentiment > 0.1
+          ? "positive"
+          : sentiment < -0.1
+            ? "negative"
+            : "neutral",
+      confidence: Number.parseFloat(
+        Math.min(Math.max(confidence, 0), 1).toFixed(8),
+      ),
+      totalScore: Number.parseFloat(
+        Math.min(Math.max(totalScore, 0), 1).toFixed(8),
+      ),
+      sentiment: Number.parseFloat(
+        Math.min(Math.max(sentiment, 0), 1).toFixed(8),
+      ),
     };
   }
 

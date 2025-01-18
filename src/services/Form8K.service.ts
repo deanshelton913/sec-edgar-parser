@@ -82,12 +82,12 @@ export class Form8KService extends BaseFilingService<
 
     // Store weight multipliers for each item type found
     const itemWeights: Record<string, number> = {};
-
     // Extract and map item numbers from the filing text to their standardized codes
     const itemNumbers = parsedDoc.itemInformation
       .map((itemText) => {
         const itemNumber =
           Form8KItemTextMap[itemText as keyof typeof Form8KItemTextMap];
+
         if (itemNumber) {
           // Use predefined weight for the item type, or default to 0.1
           itemWeights[itemNumber] =
@@ -108,12 +108,15 @@ export class Form8KService extends BaseFilingService<
 
       // Average the score across all items to normalize
       totalScore = totalScore / itemNumbers.length;
-
       return {
         ...baseImpact,
-        totalScore,
+        totalScore: Number.parseFloat(totalScore.toFixed(8)),
         marketImpact:
-          totalScore > 0 ? "positive" : totalScore < 0 ? "negative" : "neutral",
+          totalScore > 0.1
+            ? "positive"
+            : totalScore < -0.1
+              ? "negative"
+              : "neutral",
       };
     }
 

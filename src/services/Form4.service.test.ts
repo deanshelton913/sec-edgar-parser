@@ -31,9 +31,9 @@ describe("Form4Service", () => {
       },
       estimatedImpact: {
         confidence: 0.6,
-        marketImpact: "positive",
-        sentiment: 0.022779043280182234,
-        totalScore: 0.0022779043280182236,
+        marketImpact: "neutral",
+        sentiment: 0.02277904,
+        totalScore: 0.0022779,
       },
       parsed: {
         acceptanceDatetime: "20240501130722",

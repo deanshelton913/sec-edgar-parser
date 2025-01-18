@@ -132,9 +132,9 @@ export class Form13FHrService extends BaseFilingService<
 
     return {
       marketImpact,
-      totalScore: totalValue, // Using total value as a score
-      confidence: Math.min(Math.max(confidence, 0), 1), // Ensure confidence is between 0 and 1
-      sentiment: baseImpact.sentiment, // Using sentiment from base impact
+      totalScore: Number.parseFloat(totalValue.toFixed(8)), // Normalize total value to be between 0 and 1
+      confidence: Number.parseFloat(confidence.toFixed(8)), // Ensure confidence is between 0 and 1
+      sentiment: Number.parseFloat(baseImpact.sentiment.toFixed(8)), // Using sentiment from base impact
     };
   }
 }
