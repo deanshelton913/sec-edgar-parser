@@ -15,23 +15,30 @@ export abstract class BaseFilingService<
    * IMPORTANT: This must be implemented by the subclass.
    * Returns the person, company, or entity filing the document.
    */
-  protected abstract getFilingAgent(parsedDoc: A): string;
+  protected abstract getFilingAgent(parsedDoc: A, documentText: string): string;
 
   /**
    * Processes a document and extracts key information
    */
   async processDocument(documentText: string): Promise<T> {
     const parsedDocument = await this.parseDocument(documentText);
+
     return {
       derived: {
-        accessionNumber: this.getAccessionNumber(parsedDocument),
-        acceptanceDatetime: this.getAcceptanceDatetime(parsedDocument),
-        publicDocumentCount: this.getPublicDocumentCount(parsedDocument),
-        filedAsOfDate: this.getFiledAsOfDate(parsedDocument),
-        dateAsOfChange: this.getDateAsOfChange(parsedDocument),
-        filingAgent: this.getFilingAgent(parsedDocument), // the person, company, or entity filing the document
-        tradingSymbol: this.extractTradingSymbol(documentText), // the trading symbol of the company filing the document
-        submissionType: this.getSubmissionType(parsedDocument), // the type of filing, e.g. 8-K, 13F, etc.
+        accessionNumber: this.getAccessionNumber(parsedDocument, documentText),
+        acceptanceDatetime: this.getAcceptanceDatetime(
+          parsedDocument,
+          documentText,
+        ),
+        publicDocumentCount: this.getPublicDocumentCount(
+          parsedDocument,
+          documentText,
+        ),
+        filedAsOfDate: this.getFiledAsOfDate(parsedDocument, documentText),
+        dateAsOfChange: this.getDateAsOfChange(parsedDocument, documentText),
+        filingAgent: this.getFilingAgent(parsedDocument, documentText), // the person, company, or entity filing the document
+        tradingSymbol: this.extractTradingSymbol(parsedDocument, documentText), // the trading symbol of the company filing the document
+        submissionType: this.getSubmissionType(parsedDocument, documentText), // the type of filing, e.g. 8-K, 13F, etc.
       },
       estimatedImpact: this.assessImpact(documentText, parsedDocument), // the estimated impact of the filing on the market
       parsed: parsedDocument, // This does duplicate data, but it's here to allow for type safety.
@@ -48,7 +55,10 @@ export abstract class BaseFilingService<
   /**
    * Extracts company trading symbol from document text using regex patterns
    */
-  protected extractTradingSymbol(documentText: string): string | null {
+  protected extractTradingSymbol(
+    _parsedDocument: A,
+    documentText: string,
+  ): string | null {
     const patterns = [
       /\(OTC:\s*([A-Z]+)\)/i,
       /Trading Symbol:\s*([A-Z]+)/i,
@@ -67,11 +77,11 @@ export abstract class BaseFilingService<
     return null;
   }
 
-  protected getAccessionNumber(parsedDoc: A): string {
+  protected getAccessionNumber(parsedDoc: A, _documentText: string): string {
     return parsedDoc.accessionNumber;
   }
 
-  protected getAcceptanceDatetime(parsedDoc: A): number {
+  protected getAcceptanceDatetime(parsedDoc: A, _documentText: string): number {
     return Math.floor(
       new Date(
         `${parsedDoc.acceptanceDatetime.slice(
@@ -94,11 +104,14 @@ export abstract class BaseFilingService<
     );
   }
 
-  protected getPublicDocumentCount(parsedDoc: A): string {
+  protected getPublicDocumentCount(
+    parsedDoc: A,
+    _documentText: string,
+  ): string {
     return parsedDoc.publicDocumentCount;
   }
 
-  protected getFiledAsOfDate(parsedDoc: A): number {
+  protected getFiledAsOfDate(parsedDoc: A, _documentText: string): number {
     return Math.floor(
       new Date(
         `${parsedDoc.filedAsOfDate.slice(0, 4)}-${parsedDoc.filedAsOfDate.slice(
@@ -109,7 +122,7 @@ export abstract class BaseFilingService<
     );
   }
 
-  protected getDateAsOfChange(parsedDoc: A): number {
+  protected getDateAsOfChange(parsedDoc: A, _documentText: string): number {
     return Math.floor(
       new Date(
         `${parsedDoc.dateAsOfChange.slice(
@@ -123,7 +136,7 @@ export abstract class BaseFilingService<
     );
   }
 
-  protected getSubmissionType(parsedDoc: A): string {
+  protected getSubmissionType(parsedDoc: A, _documentText: string): string {
     return parsedDoc.conformedSubmissionType;
   }
 

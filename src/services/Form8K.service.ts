@@ -1,6 +1,17 @@
+/**
+ * Service for processing SEC Form 8-K filings.
+ *
+ * Form 8-K is used to report major events that shareholders should know about.
+ * This includes significant corporate events such as mergers, acquisitions,
+ * changes in control, bankruptcy, and other important events that may affect
+ * the company's financial condition or operations. The form provides timely
+ * disclosure to ensure that investors have access to important information
+ * that could impact their investment decisions.
+ */
+
 import { type Form8KData, Form8KItemTextMap } from "../types/form8k.types";
 import { BaseFilingService } from "./BaseFilingService";
-import { form8kItemSentimentWeights } from "../data/item-weights";
+import { form8KItemSentimentWeights } from "../data/item-weights";
 import type { ParsedDocument } from "../types/filing-output";
 
 /**
@@ -11,7 +22,10 @@ export class Form8KService extends BaseFilingService<
   ParsedDocument<Form8KData>,
   Form8KData
 > {
-  protected getFilingAgent(parsedDoc: Form8KData): string {
+  protected getFilingAgent(
+    parsedDoc: Form8KData,
+    _documentText: string,
+  ): string {
     return parsedDoc.filer[0].companyData.companyConformedName;
   }
 
@@ -23,7 +37,7 @@ export class Form8KService extends BaseFilingService<
    *
    * The assessment process:
    * 1. Gets base sentiment analysis from parent class
-   * 2. Identifies specific 8-K item types (e.g. Item 1.01, 2.01) from the filing
+   * 2. Identifies specific 8-K item types (e.g. Item 1, 2) from the filing
    * 3. Applies pre-defined weights to each item type based on historical market impact
    * 4. Calculates weighted average impact score across all items
    *
@@ -44,7 +58,6 @@ export class Form8KService extends BaseFilingService<
     const itemWeights: Record<string, number> = {};
 
     // Extract and map item numbers from the filing text to their standardized codes
-    // e.g. "Item 1.01" -> "1.01" and look up corresponding weights
     const itemNumbers = parsedDoc.itemInformation
       .map((itemText) => {
         const itemNumber =
@@ -52,7 +65,7 @@ export class Form8KService extends BaseFilingService<
         if (itemNumber) {
           // Use predefined weight for the item type, or default to 0.1
           itemWeights[itemNumber] =
-            form8kItemSentimentWeights[itemNumber] ?? 0.1;
+            form8KItemSentimentWeights[itemNumber] ?? 0.1;
         }
         return itemNumber || null;
       })

@@ -1,12 +1,12 @@
-import type { ParsedDocument } from "./filing-output";
+import type { ConsistentDocumentFields, ParsedDocument } from "./filing-output";
 
-interface Form4Data {
+export interface Form4Data extends ConsistentDocumentFields {
   ownershipDocument: {
     issuer: {
       issuerCik: string;
       issuerName: string;
       issuerTradingSymbol: string;
-    };
+    }[];
     reportingOwner: {
       reportingOwnerId: {
         rptOwnerCik: string;
@@ -27,7 +27,7 @@ interface Form4Data {
         officerTitle?: string;
         otherText?: string;
       };
-    };
+    }[];
     nonDerivativeTable?: {
       nonDerivativeTransaction: Array<{
         securityTitle: string;

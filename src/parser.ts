@@ -90,7 +90,7 @@ function badYamlToObj(text: string) {
  * @param obj
  * @returns
  */
-function normalizeKnownKeysAsAppropriateDataTypes(obj: IndexedObject) {
+export function normalizeKnownKeysAsAppropriateDataTypes(obj: IndexedObject) {
   // Recursive function to iterate over all keys and child keys
   function recurse(obj: IndexedObject) {
     for (const key in obj) {
@@ -236,7 +236,7 @@ export function badXmlToObj(xmlString: string) {
   return obj.secHeader;
 }
 
-function camelizeKeys<T>(obj: T): T {
+export function camelizeKeys<T>(obj: T): T {
   if (typeof obj !== "object" || obj === null) {
     return obj;
   }
@@ -262,7 +262,7 @@ function camelizeKeys<T>(obj: T): T {
 export function splitDocumentIntoYmlAndXML(file: string) {
   const fileLines = file.split("\n");
   let endOfYamlLikeContent = 0;
-  let endOfXMLindex = 0;
+  let indexOfSecHeaderClosingTag = 0;
   let startOfYamlContent = 0;
   for (let i = 0; i < fileLines.length; i++) {
     if (fileLines[i].trim().includes("ACCESSION NUMBER:")) {
@@ -279,7 +279,7 @@ export function splitDocumentIntoYmlAndXML(file: string) {
   }
   for (let i = endOfYamlLikeContent; i < fileLines.length; i++) {
     if (fileLines[i].trim() === "</SEC-HEADER>") {
-      endOfXMLindex = i; // Return the index of the line
+      indexOfSecHeaderClosingTag = i; // Return the index of the line
       break;
     }
   }
@@ -288,7 +288,9 @@ export function splitDocumentIntoYmlAndXML(file: string) {
     .slice(startOfYamlContent, endOfYamlLikeContent)
     .join("\n");
   const xmlLikeStructure = `<SEC-HEADER>
-  ${fileLines.slice(endOfYamlLikeContent, endOfXMLindex + 1).join("\n")}`;
+  ${fileLines
+    .slice(endOfYamlLikeContent, indexOfSecHeaderClosingTag + 1)
+    .join("\n")}`;
 
   return { yamlLikeStructure, xmlLikeStructure };
 }

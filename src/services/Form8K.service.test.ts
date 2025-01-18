@@ -9,7 +9,7 @@ describe("Form8KService", () => {
   beforeEach(() => {
     service = new Form8KService();
     sampleFiling = readFileSync(
-      join(__dirname, "../../test/test-fixtures/8k-0.txt"),
+      join(__dirname, "../../test/test-fixtures/form8K.txt"),
       "utf-8",
     );
   });

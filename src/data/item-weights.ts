@@ -1,4 +1,4 @@
-export const form8kItemSentimentWeights = {
+export const form8KItemSentimentWeights = {
   "1.01": 0.7, // Material Agreement
   "1.02": -0.6, // Termination of Agreement
   "1.03": -0.8, // Bankruptcy
