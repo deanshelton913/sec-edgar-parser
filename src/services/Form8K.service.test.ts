@@ -19,15 +19,14 @@ describe("Form8KService", () => {
 
     expect(result).toEqual({
       derived: {
-        acceptanceDatetime: "20180425093712",
+        acceptanceDatetime: 1524674232,
         accessionNumber: "0001511164-18-000283",
-        dateAsOfChange: "20180425",
-        filedAsOfDate: "20180425",
+        dateAsOfChange: 1524614400,
+        filedAsOfDate: 1524614400,
         filingAgent: "MJ Holdings, Inc.",
         submissionType: "8-K",
         publicDocumentCount: "19",
         tradingSymbol: "MJNE",
-        unixTimestamp: 1524614400,
       },
       estimatedImpact: {
         confidence: 0.5999968530698304,

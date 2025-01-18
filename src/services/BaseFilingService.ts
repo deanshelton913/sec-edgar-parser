@@ -29,7 +29,6 @@ export abstract class BaseFilingService<
         publicDocumentCount: this.getPublicDocumentCount(parsedDocument),
         filedAsOfDate: this.getFiledAsOfDate(parsedDocument),
         dateAsOfChange: this.getDateAsOfChange(parsedDocument),
-        unixTimestamp: this.getUnixTimestamp(parsedDocument), // the timestamp of the filing
         filingAgent: this.getFilingAgent(parsedDocument), // the person, company, or entity filing the document
         tradingSymbol: this.extractTradingSymbol(documentText), // the trading symbol of the company filing the document
         submissionType: this.getSubmissionType(parsedDocument), // the type of filing, e.g. 8-K, 13F, etc.
@@ -72,29 +71,54 @@ export abstract class BaseFilingService<
     return parsedDoc.accessionNumber;
   }
 
-  protected getAcceptanceDatetime(parsedDoc: A): string {
-    return parsedDoc.acceptanceDatetime;
+  protected getAcceptanceDatetime(parsedDoc: A): number {
+    return Math.floor(
+      new Date(
+        `${parsedDoc.acceptanceDatetime.slice(
+          0,
+          4,
+        )}-${parsedDoc.acceptanceDatetime.slice(
+          4,
+          6,
+        )}-${parsedDoc.acceptanceDatetime.slice(
+          6,
+          8,
+        )} ${parsedDoc.acceptanceDatetime.slice(
+          8,
+          10,
+        )}:${parsedDoc.acceptanceDatetime.slice(
+          10,
+          12,
+        )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}`,
+      ).getTime() / 1000,
+    );
   }
 
   protected getPublicDocumentCount(parsedDoc: A): string {
     return parsedDoc.publicDocumentCount;
   }
 
-  protected getFiledAsOfDate(parsedDoc: A): string {
-    return parsedDoc.filedAsOfDate;
-  }
-
-  protected getDateAsOfChange(parsedDoc: A): string {
-    return parsedDoc.dateAsOfChange;
-  }
-
-  protected getUnixTimestamp(parsedDoc: A): number {
+  protected getFiledAsOfDate(parsedDoc: A): number {
     return Math.floor(
       new Date(
         `${parsedDoc.filedAsOfDate.slice(0, 4)}-${parsedDoc.filedAsOfDate.slice(
           4,
           6,
         )}-${parsedDoc.filedAsOfDate.slice(6, 8)}`,
+      ).getTime() / 1000,
+    );
+  }
+
+  protected getDateAsOfChange(parsedDoc: A): number {
+    return Math.floor(
+      new Date(
+        `${parsedDoc.dateAsOfChange.slice(
+          0,
+          4,
+        )}-${parsedDoc.dateAsOfChange.slice(
+          4,
+          6,
+        )}-${parsedDoc.dateAsOfChange.slice(6, 8)}`,
       ).getTime() / 1000,
     );
   }

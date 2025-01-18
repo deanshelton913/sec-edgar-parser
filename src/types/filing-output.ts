@@ -2,10 +2,10 @@ export interface ParsedDocument<T extends ConsistentDocumentFields> {
   // Common SEC filing header fields
   derived: {
     accessionNumber: string;
-    acceptanceDatetime: string;
+    acceptanceDatetime: number;
     conformedSubmissionType: string;
     publicDocumentCount: string;
-    filedAsOfDate: string;
+    filedAsOfDate: number;
     dateAsOfChange: string;
     unixTimestamp: number;
     filingAgent: string;
