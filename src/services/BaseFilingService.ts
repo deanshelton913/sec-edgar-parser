@@ -3,32 +3,38 @@ import type { ConsistentDocumentFields } from "../types/filing-output";
 import type { ParsedDocument } from "../types/filing-output";
 import Sentiment from "sentiment";
 import { vagueTerms } from "../data/vague-terms";
-import * as parser from "../parser";
+
+import type { StorageService } from "./StorageService";
+
+import { injectable, inject } from "tsyringe";
+import type { ParserService } from "./ParserService";
+import { FailureByDesign } from "../FailureByDesign";
+import type { UueCodecService } from "./UueCodecService";
+import type { LoggingService } from "./LoggingService";
+import type { HttpService } from "./HttpService";
 
 const sentiment = new Sentiment();
 
-export abstract class BaseFilingService<
+@injectable()
+export class BaseFilingService<
   T extends ParsedDocument<A>,
   A extends ConsistentDocumentFields,
 > {
-  /**
-   * IMPORTANT: This must be implemented by the subclass.
-   * Returns the person, company, or entity filing the document.
-   */
-  protected abstract getFilingAgent(parsedDoc: A, documentText: string): string;
+  constructor(
+    @inject("ParserService") private parserService: ParserService,
+    @inject("UueCodecService") private uueCodecService: UueCodecService,
+    @inject("StorageService") private storageService: StorageService,
+    @inject("LoggingService") private loggingService: LoggingService,
+    @inject("HttpService") private httpService: HttpService,
+  ) {}
 
-  protected abstract extractCusip(
-    parsedDocument: A,
-    _documentText: string,
-  ): string | null;
-  /**
-   * Processes a document and extracts key information
-   */
-  async processDocument(documentText: string): Promise<T> {
+  public async parseDocumentAndFormatOutput(
+    documentText: string,
+    url: string,
+  ): Promise<T> {
     const parsedDocument = await this.parseDocument(documentText);
-
     return {
-      derived: {
+      basic: {
         accessionNumber: this.getAccessionNumber(parsedDocument, documentText),
         acceptanceDatetime: this.getAcceptanceDatetime(
           parsedDocument,
@@ -39,31 +45,75 @@ export abstract class BaseFilingService<
           documentText,
         ),
         filedAsOfDate: this.getFiledAsOfDate(parsedDocument, documentText),
-        dateAsOfChange: this.getDateAsOfChange(parsedDocument, documentText),
-        filingAgent: this.getFilingAgent(parsedDocument, documentText), // the person, company, or entity filing the document
-        cusip: this.extractCusip(parsedDocument, documentText), //  the cusip of the company filing the document
-        tradingSymbol: this.extractTradingSymbol(parsedDocument, documentText), // the trading symbol of the company filing the document
         submissionType: this.getSubmissionType(parsedDocument, documentText), // the type of filing, e.g. 8-K, 13F, etc.
+        url,
       },
       estimatedImpact: this.assessImpact(documentText, parsedDocument), // the estimated impact of the filing on the market
       parsed: parsedDocument, // This does duplicate data, but it's here to allow for type safety.
+      attachments: await this.getAttachments(parsedDocument, documentText, url),
     } as unknown as T;
+  }
+
+  protected async getAttachments(
+    parsedDocument: A,
+    documentText: string,
+    url: string,
+  ): Promise<string[]> {
+    const publicDocumentCount = Number.parseInt(
+      parsedDocument.publicDocumentCount,
+    );
+    if (publicDocumentCount === 0) {
+      return [];
+    }
+    const files = this.uueCodecService.decodeUuEncodedFiles(documentText);
+    if (files.length === 0) {
+      const requestId = await this.httpService.deriveRequestId(url);
+      this.loggingService.warn(
+        `[BASE_FILING_SERVICE][${requestId}] NO_ATTACHMENTS_FOUND`,
+      );
+      return [];
+    }
+    this.loggingService.debug(
+      `[BASE_FILING_SERVICE] DECODING_ATTACHMENTS: ${url}`,
+    );
+    const promises = [];
+    const keys = [];
+    for (const file of files) {
+      const basePath = this.storageService.getS3KeyFromSecUrl(url);
+      const key = `${basePath}/${file.name}`;
+
+      const baseDir = this.storageService.useS3
+        ? this.storageService.s3BaseDirectory
+        : this.storageService.localBaseDirectory;
+      keys.push(`${baseDir}/${key}`);
+      promises.push(this.storageService.writeFile(key, file.data));
+    }
+    this.loggingService.debug(
+      `[BASE_FILING_SERVICE] WRITING_ATTACHMENTS: ${keys.join(",\n")}`,
+    );
+    await Promise.all(promises);
+
+    return keys;
   }
 
   /**
    * Parses raw document text into structured data
    */
-  protected async parseDocument(documentText: string): Promise<A> {
-    return parser.getObjectFromString(documentText);
+  public async parseDocument(documentText: string): Promise<A> {
+    return this.parserService.parseRawSecFiling(documentText);
   }
 
   /**
    * Extracts company trading symbol from document text using regex patterns
    */
-  protected abstract extractTradingSymbol(
+  protected extractTradingSymbol(
     _parsedDocument: A,
-    documentText: string,
-  ): string | null;
+    _documentText: string,
+  ): string | null {
+    throw new FailureByDesign(
+      "extractTradingSymbol must be implemented by the subclass",
+    );
+  }
 
   protected getAccessionNumber(parsedDoc: A, _documentText: string): string {
     return parsedDoc.accessionNumber;
@@ -107,17 +157,6 @@ export abstract class BaseFilingService<
     return Math.floor(new Date(dateStr).getTime() / 1000);
   }
 
-  protected getDateAsOfChange(parsedDoc: A, _documentText: string): number {
-    const dateStr = `${parsedDoc.dateAsOfChange.slice(
-      0,
-      4,
-    )}-${parsedDoc.dateAsOfChange.slice(4, 6)}-${parsedDoc.dateAsOfChange.slice(
-      6,
-      8,
-    )}T00:00:00-04:00`; // Changed to Eastern Time
-    return Math.floor(new Date(dateStr).getTime() / 1000);
-  }
-
   protected getSubmissionType(parsedDoc: A, _documentText: string): string {
     return parsedDoc.conformedSubmissionType;
   }
@@ -125,7 +164,7 @@ export abstract class BaseFilingService<
   /**
    * Base implementation of impact assessment
    */
-  protected assessImpact(
+  public assessImpact(
     rawDocumentText: string,
     _parsedDoc: A,
   ): ParsedDocument<A>["estimatedImpact"] {

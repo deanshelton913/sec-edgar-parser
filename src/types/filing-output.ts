@@ -1,6 +1,12 @@
+import type { Form8KData } from "./form8k.types";
+import type { Form4Data } from "./form4.types";
+import type { Form13FFiling } from "./form13f.types";
+
+export type ParsedDocumentTypes = Form8KData | Form4Data | Form13FFiling;
+
 export interface ParsedDocument<T extends ConsistentDocumentFields> {
   // Common SEC filing header fields
-  derived: {
+  basic: {
     accessionNumber: string;
     acceptanceDatetime: number;
     conformedSubmissionType: string;
@@ -8,10 +14,8 @@ export interface ParsedDocument<T extends ConsistentDocumentFields> {
     filedAsOfDate: number;
     dateAsOfChange: string;
     unixTimestamp: number;
-    filingAgent: string;
-    tradingSymbol: string | null;
-    cusip: string | null;
     submissionType: string;
+    url: string;
   };
   estimatedImpact: {
     marketImpact: "positive" | "negative" | "neutral";
@@ -20,6 +24,7 @@ export interface ParsedDocument<T extends ConsistentDocumentFields> {
     sentiment: number;
   };
   parsed: T;
+  attachments?: string[];
 }
 
 export interface ConsistentDocumentFields {
@@ -28,6 +33,5 @@ export interface ConsistentDocumentFields {
   conformedSubmissionType: string;
   publicDocumentCount: string;
   filedAsOfDate: string;
-  dateAsOfChange: string;
   unixTimestamp: number;
 }

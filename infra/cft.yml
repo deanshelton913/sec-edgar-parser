@@ -1,0 +1,162 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+  Launch a free-tier (t2.micro) EC2 instance in us-west-2 with Node.js,
+  run npm ci, schedule src/main.ts via cron, and push logs to CloudWatch.
+
+Parameters:
+  KeyName:
+    Description: "Name of an existing EC2 KeyPair for SSH access."
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: "Must be a valid EC2 Key Pair name."
+
+Resources:
+  # ----------------------------------------------------------------------------
+  # CloudWatch Log Group (to store the application logs)
+  # ----------------------------------------------------------------------------
+  MyAppLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/${AWS::StackName}/my-app/logs"
+      RetentionInDays: 14
+
+  # ----------------------------------------------------------------------------
+  # IAM Role + Instance Profile for EC2 (CloudWatch Agent permissions)
+  # ----------------------------------------------------------------------------
+  CWAgentRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: 
+                - ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+
+  CWAgentInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref CWAgentRole
+
+  # ----------------------------------------------------------------------------
+  # Security Group (allow SSH for demonstration - restrict in production)
+  # ----------------------------------------------------------------------------
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow SSH inbound."
+      VpcId: !Ref "AWS::NoValue"  # Use default VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: "0.0.0.0/0"
+      Tags:
+        - Key: Name
+          Value: !Sub "${AWS::StackName}-EC2-SG"
+
+  # ----------------------------------------------------------------------------
+  # EC2 Instance
+  # ----------------------------------------------------------------------------
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      # Free-tier instance type
+      InstanceType: t2.micro
+      # Latest Amazon Linux 2 AMI for us-west-2 via SSM
+      ImageId: !Sub "resolve:ssm:/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+      KeyName: !Ref KeyName
+      SecurityGroupIds:
+        - !GetAtt EC2SecurityGroup.GroupId
+
+      # Attach the IAM Role via Instance Profile (for CloudWatch Agent)
+      IamInstanceProfile: !Ref CWAgentInstanceProfile
+
+      # ------------------------------------------------------------------------
+      # UserData script
+      # ------------------------------------------------------------------------
+      UserData:
+        Fn::Base64:
+          Fn::Sub:
+            - |
+              #!/bin/bash
+              set -xe
+
+              # 1. Update packages
+              yum update -y
+
+              # 2. Install Node.js LTS via NodeSource
+              curl -fsSL https://rpm.nodesource.com/setup_lts.x | bash -
+              yum install -y nodejs
+
+              # 3. [Optional] Install Git if we need to clone a repo
+              yum install -y git
+
+              # 4. Set up your application directory
+              cd /home/ec2-user
+
+              # 4a. If your code is not baked into the AMI, clone it here:
+              # git clone --branch sentiment-analysis https://github.com/your-org/your-repo.git my-app
+              # cd my-app
+
+              # Otherwise, if code is already present, just cd to the correct folder:
+              mkdir -p my-app
+              cd my-app
+
+              # 5. Install dependencies from your existing package-lock.json
+              npm ci
+
+              # 6. Set up a cron job to run src/main.ts every minute
+              #    Redirect output to app.log so we can capture logs
+              CRON_COMMAND="cd /home/ec2-user/my-app && npx ts-node src/main.ts >> /home/ec2-user/my-app/app.log 2>&1"
+              CRON_SCHEDULE="* * * * *"
+              ( crontab -l 2>/dev/null | grep -v -F "$CRON_COMMAND" ; echo "$CRON_SCHEDULE $CRON_COMMAND" ) | crontab -
+
+              # 7. Install & configure CloudWatch Agent to push app.log
+              yum install -y amazon-cloudwatch-agent
+
+              mkdir -p /opt/aws/amazon-cloudwatch-agent/etc
+              cat <<EOF > /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+              {
+                "logs": {
+                  "logs_collected": {
+                    "files": {
+                      "collect_list": [
+                        {
+                          "file_path": "/home/ec2-user/my-app/app.log",
+                          "log_group_name": "${CWLogGroup}",
+                          "log_stream_name": "{instance_id}",
+                          "timestamp_format": "%b %d %H:%M:%S"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+              EOF
+
+              /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+                -a start \
+                -m ec2 \
+                -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+                -s
+            - {
+                CWLogGroup: !Ref MyAppLogGroup
+              }
+
+
+
+Outputs:
+  InstanceId:
+    Description: "The ID of the EC2 instance."
+    Value: !Ref EC2Instance
+
+  PublicIp:
+    Description: "Public IP address of the EC2 instance."
+    Value: !GetAtt EC2Instance.PublicIp
