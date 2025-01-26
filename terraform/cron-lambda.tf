@@ -36,8 +36,8 @@ module "cron" {
 ############
 resource "aws_cloudwatch_event_rule" "cron" {
   name                = "${local.prefix}-cron-cron"
-  description         = "scheduled every 30 min"
-  schedule_expression = "rate(30 minutes)"
+  description         = "scheduled every 1 min"
+  schedule_expression = "rate(1 minute)"
 }
 
 resource "aws_cloudwatch_event_target" "cron" {

@@ -12,7 +12,6 @@ exports.handler = async () => {
     loggingService.error(`[MAIN] FATAL ERROR: ${e}`);
     process.exit(1);
   }
-  await loggingService.flushAndExit(); // this makes sure that all logs get to 3rd party.
 
   return {
     statusCode: 200,

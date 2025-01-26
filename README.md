@@ -154,3 +154,10 @@ console.log(JSON.stringify(getObjectFromString(string), null, 2))
 
 ## License
 This project is licensed under the ISC License - see the [License](https://en.wikipedia.org/wiki/ISC_license) for details.
+
+
+## Deployment
+IMPORTANT: Currently not done by CI.
+Deployments are done from Deans machine, sent to his AWS account, and deployed via terraform.
+The code is dockerized and run as an AWS lambda on a 1 min cron.
+

@@ -1,11 +1,6 @@
 import winston from "winston";
-import CloudWatchTransport from "winston-cloudwatch";
 import { injectable } from "tsyringe";
-const cloudWatchTransport = new CloudWatchTransport({
-  logGroupName: "production-sec-edgar-parser-cron",
-  logStreamName: `cron-${new Date().toISOString().slice(0, 10)}`, // e.g., "cron-2025-01-26"
-  awsRegion: "us-west-2",
-});
+
 const logger = winston.createLogger({
   level: "debug", // Set the default log level for the logger
   format: winston.format.combine(
@@ -17,8 +12,6 @@ const logger = winston.createLogger({
   transports: [
     // Console Transport for local debugging
     new winston.transports.Console(),
-    // CloudWatch Transport for logs in AWS
-    cloudWatchTransport,
   ],
 });
 
@@ -39,23 +32,5 @@ export class LoggingService {
 
   public warn(...params: unknown[]) {
     this.client.warn(params.join(" "));
-  }
-  // Flush all logs and clean up transports
-  public async flushAndExit(): Promise<void> {
-    // Handle CloudWatch flushing specifically
-    if (cloudWatchTransport.kthxbye) {
-      await new Promise<void>((resolve) => {
-        cloudWatchTransport.kthxbye(() => {
-          resolve();
-        });
-      });
-    }
-
-    // Wait for Winston to flush any remaining logs
-    await new Promise<void>((resolve) => {
-      this.client.end(() => {
-        resolve();
-      });
-    });
   }
 }

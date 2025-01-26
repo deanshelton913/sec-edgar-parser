@@ -14,14 +14,9 @@
     "test": "npm run clean && jest"
   },
   "release": {
-    "branches": [
-      "main"
-    ]
+    "branches": ["main"]
   },
-  "keywords": [
-    "SEC",
-    "EDGAR"
-  ],
+  "keywords": ["SEC", "EDGAR"],
   "author": "dean shelton",
   "license": "ISC",
   "devDependencies": {
@@ -56,7 +51,6 @@
     "tsyringe": "^4.8.0",
     "uuencode": "^0.0.4",
     "winston": "^3.17.0",
-    "winston-cloudwatch": "^6.3.0",
     "yaml": "2.4.2"
   },
   "config": {
