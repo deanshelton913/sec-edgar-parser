@@ -1,0 +1,6 @@
+__mocks__
+.vscode
+node_modules
+terraform
+dist
+test

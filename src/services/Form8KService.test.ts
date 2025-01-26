@@ -16,26 +16,29 @@ describe("Form8KService", () => {
   });
 
   it("should process an 8-K document correctly", async () => {
-    const result = await service.parseDocumentAndFormatOutput(sampleFiling, "whatever");
+    const result = await service.parseDocumentAndFormatOutput(
+      sampleFiling,
+      "whatever",
+    );
 
     expect(result).toEqual({
       attachments: [
-        "/tmp/0001511164-18-000283/exhibit9911.jpg",
-        "/tmp/0001511164-18-000283/exhibit9912.jpg",
-        "/tmp/0001511164-18-000283/exhibit9913.jpg",
-        "/tmp/0001511164-18-000283/exhibit9914.jpg",
-        "/tmp/0001511164-18-000283/exhibit9915.jpg",
-        "/tmp/0001511164-18-000283/exhibit9916.jpg",
-        "/tmp/0001511164-18-000283/exhibit9917.jpg",
-        "/tmp/0001511164-18-000283/exhibit9918.jpg",
-        "/tmp/0001511164-18-000283/exhibit9919.jpg",
-        "/tmp/0001511164-18-000283/exhibit99110.jpg",
-        "/tmp/0001511164-18-000283/exhibit99111.jpg",
-        "/tmp/0001511164-18-000283/exhibit99112.jpg",
-        "/tmp/0001511164-18-000283/exhibit99113.jpg",
-        "/tmp/0001511164-18-000283/exhibit99114.jpg",
-        "/tmp/0001511164-18-000283/exhibit99115.jpg",
-        "/tmp/0001511164-18-000283/exhibit99116.jpg",
+        "edgar-filings/whatever/exhibit9911.jpg",
+        "edgar-filings/whatever/exhibit9912.jpg",
+        "edgar-filings/whatever/exhibit9913.jpg",
+        "edgar-filings/whatever/exhibit9914.jpg",
+        "edgar-filings/whatever/exhibit9915.jpg",
+        "edgar-filings/whatever/exhibit9916.jpg",
+        "edgar-filings/whatever/exhibit9917.jpg",
+        "edgar-filings/whatever/exhibit9918.jpg",
+        "edgar-filings/whatever/exhibit9919.jpg",
+        "edgar-filings/whatever/exhibit99110.jpg",
+        "edgar-filings/whatever/exhibit99111.jpg",
+        "edgar-filings/whatever/exhibit99112.jpg",
+        "edgar-filings/whatever/exhibit99113.jpg",
+        "edgar-filings/whatever/exhibit99114.jpg",
+        "edgar-filings/whatever/exhibit99115.jpg",
+        "edgar-filings/whatever/exhibit99116.jpg",
       ],
       basic: {
         acceptanceDatetime: 1524663432,

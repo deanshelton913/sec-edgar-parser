@@ -12,8 +12,14 @@ import { readdirSync } from "node:fs";
 import { join } from "node:path";
 
 const serviceFiles = readdirSync(join(__dirname, "services"))
-  .filter((file) => !file.endsWith(".test.ts"))
-  .map((file) => file.replace(".ts", ""));
+  .filter(
+    (file) =>
+      !file.endsWith(".test.ts") &&
+      !file.endsWith(".test.js") &&
+      !file.endsWith(".d.ts") &&
+      !file.endsWith(".d.js"),
+  )
+  .map((file) => file.replace(/\.(t|j)s/, "")); // remove .ts & .js suffix, and test files.
 
 for (const service of serviceFiles) {
   const serviceClass = require(`./services/${service}`)[service];

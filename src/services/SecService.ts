@@ -9,6 +9,13 @@ import type {
 import { injectable, inject } from "tsyringe";
 import { LoggingService } from "./LoggingService";
 
+const DEFAULT_REQUEST_OPTIONS = {
+  headers: {
+    "User-Agent": "Sigilant LLC. deanshelton913@gmail.com",
+    "Accept-Encoding": "gzip, deflate",
+    Host: "www.sec.gov",
+  },
+};
 /**
  * SecService is responsible for interacting with the SEC (Securities and Exchange Commission)
  * to retrieve and parse RSS feeds related to SEC filings. It utilizes the HttpService to
@@ -18,7 +25,6 @@ import { LoggingService } from "./LoggingService";
  */
 @injectable()
 export class SecService {
-  private userAgent: string;
   private baseUrl: string;
   private rssFeedUrl: string;
 
@@ -34,7 +40,6 @@ export class SecService {
     @inject(RssService) private rssService: RssService,
     @inject(LoggingService) private loggingService: LoggingService,
   ) {
-    this.userAgent = "Edgar Parsing Service";
     this.baseUrl = "https://www.sec.gov/";
     this.rssFeedUrl = `${this.baseUrl}/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&start=400&count=40&output=atom`;
   }
@@ -62,16 +67,18 @@ export class SecService {
   }
 
   protected async makeRequestToGetRssFeed(): Promise<string> {
-    const fileResponse = await this.httpService.get(this.rssFeedUrl, {
-      headers: { "User-Agent": this.userAgent },
-    });
+    const fileResponse = await this.httpService.get(
+      this.rssFeedUrl,
+      DEFAULT_REQUEST_OPTIONS,
+    );
     return fileResponse.text();
   }
 
   protected async makeRequestToGetSingleFiling(url: string): Promise<string> {
-    const fileResponse = await this.httpService.get(url, {
-      headers: { "User-Agent": this.userAgent },
-    });
+    const fileResponse = await this.httpService.get(
+      url,
+      DEFAULT_REQUEST_OPTIONS,
+    );
     return fileResponse.text();
   }
 

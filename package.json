@@ -33,12 +33,13 @@
     "@types/rss": "^0.0.32",
     "@types/sentiment": "^5.0.4",
     "@types/uuencode": "^0.0.3",
+    "@types/xml2js": "^0.4.14",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "5.4.5"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.731.1",
@@ -54,6 +55,8 @@
     "tslog": "^4.9.3",
     "tsyringe": "^4.8.0",
     "uuencode": "^0.0.4",
+    "winston": "^3.17.0",
+    "winston-cloudwatch": "^6.3.0",
     "yaml": "2.4.2"
   },
   "config": {

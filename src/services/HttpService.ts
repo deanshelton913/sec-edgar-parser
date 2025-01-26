@@ -30,10 +30,12 @@ export class HttpService {
     // Create SHA-1 hash and take the first 5 characters
     const requestId = await this.deriveRequestId(url);
     this.loggingService.debug(`[HTTP][GET][${requestId}] > ${url}`);
-    const fileResponse = await fetch(url, {
+    const requestOptions = {
       ...this.defaultProperties,
       ...options,
-    });
+    };
+
+    const fileResponse = await fetch(url, requestOptions);
     this.loggingService.debug(
       `[HTTP][GET][${requestId}] < ${fileResponse.status}`,
     );

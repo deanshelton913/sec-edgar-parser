@@ -36,7 +36,11 @@ export class RssService {
 
   constructor() {
     this.rssParser = new Parser({
-      headers: { "User-Agent": "Edgar Parsing Service" },
+      headers: {
+        "User-Agent": "Sigilant LLC. deanshelton913@gmail.com",
+        "Accept-Encoding": "gzip, deflate",
+        Host: "www.sec.gov",
+      },
       customFields: {
         feed: ["title", "link", "id", "author", "updated"],
         item: ["title", "link", "summary", "updated", "category", "id"],

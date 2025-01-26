@@ -20,7 +20,7 @@ describe("Schedule13G", () => {
     const result = await service.parseDocumentAndFormatOutput(sampleFiling, "whatever");
 
     expect(result).toEqual({
-      attachments: ["/tmp/0001815572-25-000002/acmex99ftlf.pdf"],
+      attachments: ["edgar-filings/whatever/acmex99ftlf.pdf"],
       basic: {
         acceptanceDatetime: 1737165458,
         accessionNumber: "0001815572-25-000002",
