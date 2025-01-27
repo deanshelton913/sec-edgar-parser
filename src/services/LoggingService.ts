@@ -2,6 +2,7 @@ import winston from "winston";
 import { injectable } from "tsyringe";
 
 const logger = winston.createLogger({
+  silent: process.env.NODE_ENV === "test",
   level: "debug", // Set the default log level for the logger
   format: winston.format.combine(
     winston.format.timestamp(), // Add timestamps to logs

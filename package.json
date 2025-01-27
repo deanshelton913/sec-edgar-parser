@@ -11,7 +11,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf ./dist && rm -rf ./output",
-    "test": "npm run clean && jest"
+    "test": "NODE_ENV=test npm run clean && jest"
   },
   "release": {
     "branches": ["main"]
@@ -37,7 +37,9 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.734.0",
     "@aws-sdk/client-s3": "^3.731.1",
+    "@aws-sdk/lib-dynamodb": "^3.734.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "fast-xml-parser": "4.3.6",
     "install": "^0.13.0",

@@ -33,6 +33,7 @@ export class BaseFilingService<
     url: string,
   ): Promise<T> {
     const parsedDocument = await this.parseDocument(documentText);
+
     return {
       basic: {
         accessionNumber: this.getAccessionNumber(parsedDocument, documentText),

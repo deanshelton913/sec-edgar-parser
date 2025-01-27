@@ -23,6 +23,13 @@ module "cron" {
     },
     {
       Action = [
+        "dynamodb:*", # TODO: scope to correct resource
+      ]
+      Effect   = "Allow"
+      Resource = "*" # TODO: scope to correct resource
+    },
+    {
+      Action = [
         "s3:*",
       ]
       Effect   = "Allow"

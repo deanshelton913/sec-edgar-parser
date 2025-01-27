@@ -8,6 +8,7 @@ import type {
 } from "src/types/filing-output";
 import { injectable, inject } from "tsyringe";
 import { LoggingService } from "./LoggingService";
+import { DynamoDbService } from "./DynamoDBService";
 
 const DEFAULT_REQUEST_OPTIONS = {
   headers: {
@@ -39,6 +40,7 @@ export class SecService {
     @inject(FormFactoryService) private formFactoryService: FormFactoryService,
     @inject(RssService) private rssService: RssService,
     @inject(LoggingService) private loggingService: LoggingService,
+    @inject(DynamoDbService) private dynamoDbService: DynamoDbService,
   ) {
     this.baseUrl = "https://www.sec.gov/";
     this.rssFeedUrl = `${this.baseUrl}/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&start=400&count=40&output=atom`;
@@ -105,9 +107,8 @@ export class SecService {
   private async parseSingleFiling(
     filing: EdgarFilingRssFeedItem,
   ): Promise<ParsedDocument<ParsedDocumentTypes>> {
-    const submissionType = filing.category.$.term;
     const filingServiceForType =
-      this.formFactoryService.getFilingService(submissionType);
+      this.formFactoryService.getFilingService(filing);
     const rawSingleFiling = await this.callSecToGetSingleFiling(filing);
 
     const singleParsedFiling =
@@ -137,15 +138,28 @@ export class SecService {
       const requestId = await this.httpService.deriveRequestId(
         this.stringReplaceFilingHtmlUrlToTxt(feedItem),
       );
+      const exists = await this.dynamoDbService.exists(feedItem.link);
+      if (exists) {
+        this.loggingService.debug(
+          `[SEC_SERVICE][${requestId}]  Skipping. Already Processed: ${feedItem.link}.`,
+        );
+        continue; // skip
+      }
+      this.loggingService.debug(
+        `[SEC_SERVICE][${requestId}]  New Filing: ${feedItem.link}.`,
+      );
+
       try {
         const parsedFiling = await this.parseSingleFiling(feedItem);
         parsedFilings.push(parsedFiling);
         this.loggingService.debug(
-          `[SEC_SERVICE][${requestId}]  DONE_PARSING: (type: ${parsedFiling.basic.submissionType})`,
+          `[SEC_SERVICE][${requestId}] PASS_FAIL PARSE_SUCCESS: (type: ${parsedFiling.basic.submissionType})`,
         );
+        await this.dynamoDbService.setItem(feedItem.link);
       } catch (error) {
+        this.loggingService.warn(error);
         this.loggingService.warn(
-          `[SEC_SERVICE][${requestId}]  UNABLE_TO_PARSE_FILING: (type: ${feedItem.category.$.term})`,
+          `[SEC_SERVICE][${requestId}] PASS_FAIL PARSE_FAIL: (type: ${feedItem.category.$.term})`,
         );
         unparsedFilings.push(feedItem);
       }

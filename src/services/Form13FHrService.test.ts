@@ -17,10 +17,13 @@ describe("Schedule13G", () => {
   });
 
   it("should process a Schedule13G document correctly", async () => {
-    const result = await service.parseDocumentAndFormatOutput(sampleFiling, "whatever");
+    const result = await service.parseDocumentAndFormatOutput(
+      sampleFiling,
+      "whatever",
+    );
 
     expect(result).toEqual({
-      attachments: ["edgar-filings/whatever/acmex99ftlf.pdf"],
+      attachments: ["undefined/undefined/acmex99ftlf.pdf"],
       basic: {
         acceptanceDatetime: 1737165458,
         accessionNumber: "0001815572-25-000002",

@@ -11,7 +11,13 @@ export interface EdgarFilingRssFeed {
   items: EdgarFilingRssFeedItem[];
 }
 
-export type FilingTypes = "SCHEDULE 13G/A" | "SCHEDULE 13D/A" | "4" | "8-K";
+export type FilingTypes =
+  | "SCHEDULE 13G/A"
+  | "SCHEDULE 13D/A"
+  | "4"
+  | "8-K"
+  | "4/A"
+  | "13F-HR";
 
 export interface EdgarFilingRssFeedItem {
   title: string;
