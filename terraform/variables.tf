@@ -12,5 +12,6 @@ variable "environment" {
 variable "image_tag" {
   type        = string
   description = "Tag to use when pulling lambda images."
+  default     = "latest"
 }
 
