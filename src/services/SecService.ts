@@ -159,7 +159,7 @@ export class SecService {
         );
         await this.dynamoDbService.setItem(feedItem.link, true);
       } catch (error) {
-        this.loggingService.warn(error);
+        this.loggingService.error(error);
         this.loggingService.warn(
           `[SEC_SERVICE][${requestId}] NEW_FILING_FAILED: (type: ${feedItem.category.$.term})`,
         );

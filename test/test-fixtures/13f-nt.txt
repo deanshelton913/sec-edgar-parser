@@ -1,0 +1,109 @@
+<SEC-DOCUMENT>0001178913-25-000237.txt : 20250128
+<SEC-HEADER>0001178913-25-000237.hdr.sgml : 20250128
+<ACCEPTANCE-DATETIME>20250128060311
+ACCESSION NUMBER:		0001178913-25-000237
+CONFORMED SUBMISSION TYPE:	13F-NT
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20241231
+FILED AS OF DATE:		20250128
+DATE AS OF CHANGE:		20250128
+EFFECTIVENESS DATE:		20250128
+
+FILER:
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			Migdal Investment Portfolio Management (1998) Ltd.
+		CENTRAL INDEX KEY:			0001727574
+		ORGANIZATION NAME:           	
+		IRS NUMBER:				512718230
+
+	FILING VALUES:
+		FORM TYPE:		13F-NT
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	028-18263
+		FILM NUMBER:		25560794
+
+	BUSINESS ADDRESS:	
+		STREET 1:		26 SE'ADYA GA'ON
+		CITY:			TEL AVIV - YAFFO
+		STATE:			L3
+		ZIP:			67135
+		BUSINESS PHONE:		972-3-5190640
+
+	MAIL ADDRESS:	
+		STREET 1:		26 SE'ADYA GA'ON
+		CITY:			TEL AVIV - YAFFO
+		STATE:			L3
+		ZIP:			67135
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>13F-NT
+<SEQUENCE>1
+<FILENAME>primary_doc.xml
+<TEXT>
+<XML>
+<?xml version="1.0" encoding="UTF-8"?>
+<edgarSubmission xsi:schemaLocation="http://www.sec.gov/edgar/thirteenffiler eis_13F_Filer.xsd" xmlns="http://www.sec.gov/edgar/thirteenffiler" xmlns:ns1="http://www.sec.gov/edgar/common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <schemaVersion>X0202</schemaVersion>
+  <headerData>
+    <submissionType>13F-NT</submissionType>
+    <filerInfo>
+      <liveTestFlag>LIVE</liveTestFlag>
+      <flags>
+        <confirmingCopyFlag>false</confirmingCopyFlag>
+        <returnCopyFlag>false</returnCopyFlag>
+        <overrideInternetFlag>false</overrideInternetFlag>
+      </flags>
+      <filer>
+        <credentials>
+          <cik>0001727574</cik>
+          <ccc>XXXXXXXX</ccc>
+        </credentials>
+      </filer>
+      <periodOfReport>12-31-2024</periodOfReport>
+    </filerInfo>
+  </headerData>
+  <formData>
+    <coverPage>
+      <reportCalendarOrQuarter>12-31-2024</reportCalendarOrQuarter>
+      <isAmendment>false</isAmendment>
+      <filingManager>
+        <name>Migdal Investment Portfolio Management (1998) Ltd.</name>
+        <address>
+          <ns1:street1>26 Se'adya Ga'on</ns1:street1>
+          <ns1:city>Tel Aviv - Yaffo</ns1:city>
+          <ns1:stateOrCountry>L3</ns1:stateOrCountry>
+          <ns1:zipCode>67135</ns1:zipCode>
+        </address>
+      </filingManager>
+      <reportType>13F NOTICE</reportType>
+      <form13FFileNumber>028-18263</form13FFileNumber>
+      <otherManagersInfo>
+        <otherManager>
+          <cik>0001415912</cik>
+          <form13FFileNumber>028-17312</form13FFileNumber>
+          <name>Migdal Insurance &amp; Financial Holdings Ltd.</name>
+        </otherManager>
+      </otherManagersInfo>
+      <provideInfoForInstruction5>N</provideInfoForInstruction5>
+    </coverPage>
+    <signatureBlock>
+      <name>Benny Cohen</name>
+      <title>CEO</title>
+      <phone>972-3-5190640</phone>
+      <signature>/s/ Benny Cohen</signature>
+      <city>Tel Aviv</city>
+      <stateOrCountry>L3</stateOrCountry>
+      <signatureDate>01-28-2025</signatureDate>
+    </signatureBlock>
+    <summaryPage>
+      <otherIncludedManagersCount/>
+      <tableEntryTotal/>
+      <tableValueTotal/>
+    </summaryPage>
+  </formData>
+</edgarSubmission>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>

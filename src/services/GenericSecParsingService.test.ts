@@ -26,5 +26,24 @@ describe("GenericSecParsingService", () => {
         service.parseDocumentAndFormatOutput(sampleFiling, "some_url"),
       ).not.toThrow();
     });
+
+    it("should parse a 10d filing without throwing", async () => {
+      const sampleFiling = readFileSync(
+        join(__dirname, "../../test/test-fixtures/10d.txt"),
+        "utf-8",
+      );
+      expect(() =>
+        service.parseDocumentAndFormatOutput(sampleFiling, "some_url"),
+      ).not.toThrow();
+    });
+    it("should parse a 13f-nt filing without throwing", async () => {
+      const sampleFiling = readFileSync(
+        join(__dirname, "../../test/test-fixtures/13f-nt.txt"),
+        "utf-8",
+      );
+      expect(() =>
+        service.parseDocumentAndFormatOutput(sampleFiling, "some_url"),
+      ).not.toThrow();
+    });
   });
 });

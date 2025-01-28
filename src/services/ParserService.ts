@@ -33,7 +33,7 @@ export class ParserService {
       const [key, val] = line.split(":");
 
       if (key.trim()) {
-        let cleanVal = val.trim().replace(`'`, `''`);
+        let cleanVal = val.trim().replace(/'/g, `''`); // sanitize ' to '' for yml
         if (cleanVal.trim() === "") {
           cleanVal = "";
         } else {
