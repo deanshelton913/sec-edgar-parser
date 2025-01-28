@@ -13,7 +13,7 @@ import type { ParsedDocument } from "../types/filing-output";
 import { XMLParser } from "fast-xml-parser";
 
 import { inject, injectable } from "tsyringe";
-import type { BaseFilingService } from "./BaseFilingService";
+import type { GenericSecParsingService } from "./GenericSecParsingService";
 import type { ParserService } from "./ParserService";
 
 /**
@@ -23,8 +23,8 @@ import type { ParserService } from "./ParserService";
 @injectable()
 export class Form13FHrService {
   constructor(
-    @inject("BaseFilingService")
-    private baseFilingService: BaseFilingService<
+    @inject("GenericSecParsingService")
+    private genericSecParsingService: GenericSecParsingService<
       ParsedDocument<Form13FFiling>,
       Form13FFiling
     >,
@@ -52,13 +52,15 @@ export class Form13FHrService {
     return parsedDocument.infoTable.cusip;
   }
 
-  /**
-   * Adds some unique form4 fields to the parsed document.
-   * @param documentText - The text of the document to parse.
-   * @returns The parsed document with the ownership document.
-   */
-  protected async parseDocument(documentText: string): Promise<Form13FFiling> {
-    const parsed = await this.baseFilingService.parseDocument(documentText);
+  public async parseDocumentAndFormatOutput(
+    documentText: string,
+    url: string,
+  ): Promise<ParsedDocument<Form13FFiling>> {
+    const baseDoc =
+      await this.genericSecParsingService.parseDocumentAndFormatOutput(
+        documentText,
+        url,
+      );
     const xmlParser = new XMLParser();
 
     // process the edgarSubmission from the form 13f-hr filing.
@@ -68,7 +70,7 @@ export class Form13FHrService {
     if (match) {
       const xmlContent = match[0];
       const parsedXml = xmlParser.parse(xmlContent);
-      parsed.edgarSubmission =
+      baseDoc.parsed.edgarSubmission =
         this.parserService.normalizeKnownKeysAsAppropriateDataTypes(
           parsedXml.edgarSubmission,
         ) as unknown as Form13FFiling["edgarSubmission"];
@@ -79,29 +81,12 @@ export class Form13FHrService {
     if (match) {
       const xmlContent = match[0];
       const parsedXml = xmlParser.parse(xmlContent);
-      parsed.infoTable =
+      baseDoc.parsed.infoTable =
         this.parserService.normalizeKnownKeysAsAppropriateDataTypes(
           parsedXml.infoTable,
         ) as unknown as Form13FFiling["infoTable"];
     }
-
-    return parsed;
-  }
-
-  public async parseDocumentAndFormatOutput(
-    documentText: string,
-    url: string,
-  ): Promise<ParsedDocument<Form13FFiling>> {
-    const doc =
-      await this.baseFilingService.parseDocumentAndFormatOutput(documentText, url);
-    const form13 = await this.parseDocument(documentText);
-    return {
-      ...doc,
-      parsed: {
-        ...doc.parsed,
-        ...form13,
-      },
-    };
+    return baseDoc;
   }
 
   /**
@@ -125,7 +110,7 @@ export class Form13FHrService {
     parsedDoc: Form13FFiling,
   ): ParsedDocument<Form13FFiling>["estimatedImpact"] {
     // Get base sentiment analysis from parent class
-    const baseImpact = this.baseFilingService.assessImpact(
+    const baseImpact = this.genericSecParsingService.assessImpact(
       rawDocumentText,
       parsedDoc,
     );

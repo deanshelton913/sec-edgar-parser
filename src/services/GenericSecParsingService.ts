@@ -16,7 +16,7 @@ import type { HttpService } from "./HttpService";
 const sentiment = new Sentiment();
 
 @injectable()
-export class BaseFilingService<
+export class GenericSecParsingService<
   T extends ParsedDocument<A>,
   A extends ConsistentDocumentFields,
 > {
@@ -32,7 +32,9 @@ export class BaseFilingService<
     documentText: string,
     url: string,
   ): Promise<T> {
-    const parsedDocument = await this.parseDocument(documentText);
+    const parsedDocument = (await this.parserService.parseRawSecFiling(
+      documentText,
+    )) as A;
 
     return {
       basic: {
@@ -95,13 +97,6 @@ export class BaseFilingService<
     await Promise.all(promises);
 
     return keys;
-  }
-
-  /**
-   * Parses raw document text into structured data
-   */
-  public async parseDocument(documentText: string): Promise<A> {
-    return this.parserService.parseRawSecFiling(documentText);
   }
 
   /**

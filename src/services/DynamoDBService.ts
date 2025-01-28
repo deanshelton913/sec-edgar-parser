@@ -3,6 +3,10 @@ import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { inject, injectable } from "tsyringe";
 import { LoggingService } from "./LoggingService";
 
+interface FilingStatusRecord {
+  filing_id: string;
+  parsed_successfully: boolean;
+}
 @injectable()
 export class DynamoDbService {
   private readonly tableName = "production-sec-edgar-parser-processed-filings"; // Name of the DynamoDB table
@@ -23,26 +27,39 @@ export class DynamoDbService {
    * Add (set) an item to the DynamoDB table.
    * If the item already exists, it will be overwritten.
    * @param filingId - The unique ID of the filing.
+   * @param parsedSuccessfully - Indicates whether the filing was parsed successfully.
    * @param additionalData - Any additional data to store with the record.
    */
-  async setItem(
-    filingId: string,
-    additionalData: Record<string, unknown> = {},
-  ): Promise<void> {
+  async setItem(filingId: string, parsedSuccessfully: boolean): Promise<void> {
     const item = {
       filing_id: filingId,
-      ...additionalData,
+      parsed_successfully: parsedSuccessfully,
     };
 
     await this.db.put({
       TableName: this.tableName,
       Item: item,
     });
+  }
 
-    this.loggingService.debug(
-      `[DYNAMO_DB_SERVICE] Set item in ${this.tableName}:`,
-      JSON.stringify(item),
-    );
+  /**
+   * Retrieve an item by its hash key (filing_id).
+   * @param filingId - The unique ID of the filing.
+   * @returns The item, or null if not found.
+   */
+  async getItem(filingId: string): Promise<FilingStatusRecord | null> {
+    const result = await this.db.get({
+      TableName: this.tableName,
+      Key: {
+        filing_id: filingId,
+      },
+    });
+
+    if (result.Item) {
+      return result.Item as FilingStatusRecord;
+    }
+
+    return null;
   }
 
   /**
@@ -59,10 +76,6 @@ export class DynamoDbService {
       ProjectionExpression: "filing_id", // Minimize data returned to only the key
     });
 
-    if (result.Item) {
-      return true;
-    }
-
-    return false;
+    return !!result.Item;
   }
 }

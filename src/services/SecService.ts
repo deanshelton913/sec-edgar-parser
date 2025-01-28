@@ -138,29 +138,32 @@ export class SecService {
       const requestId = await this.httpService.deriveRequestId(
         this.stringReplaceFilingHtmlUrlToTxt(feedItem),
       );
-      const exists = await this.dynamoDbService.exists(feedItem.link);
-      if (exists) {
+      const filingStatusRecord = await this.dynamoDbService.getItem(
+        feedItem.link,
+      );
+      if (filingStatusRecord) {
         this.loggingService.debug(
           `[SEC_SERVICE][${requestId}]  Skipping. Already Processed: ${feedItem.link}.`,
         );
         continue; // skip
       }
       this.loggingService.debug(
-        `[SEC_SERVICE][${requestId}]  New Filing: ${feedItem.link}.`,
+        `[SEC_SERVICE][${requestId}]  NEW_FILING_FOUND: ${feedItem.link}.`,
       );
 
       try {
         const parsedFiling = await this.parseSingleFiling(feedItem);
         parsedFilings.push(parsedFiling);
         this.loggingService.debug(
-          `[SEC_SERVICE][${requestId}] PASS_FAIL PARSE_SUCCESS: (type: ${parsedFiling.basic.submissionType})`,
+          `[SEC_SERVICE][${requestId}] NEW_FILING_PARSED: (type: ${parsedFiling.basic.submissionType})`,
         );
-        await this.dynamoDbService.setItem(feedItem.link);
+        await this.dynamoDbService.setItem(feedItem.link, true);
       } catch (error) {
         this.loggingService.warn(error);
         this.loggingService.warn(
-          `[SEC_SERVICE][${requestId}] PASS_FAIL PARSE_FAIL: (type: ${feedItem.category.$.term})`,
+          `[SEC_SERVICE][${requestId}] NEW_FILING_FAILED: (type: ${feedItem.category.$.term})`,
         );
+        await this.dynamoDbService.setItem(feedItem.link, false);
         unparsedFilings.push(feedItem);
       }
     }

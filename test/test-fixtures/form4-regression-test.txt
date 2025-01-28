@@ -1,0 +1,268 @@
+<SEC-DOCUMENT>0001079973-25-000129.txt : 20250124
+<SEC-HEADER>0001079973-25-000129.hdr.sgml : 20250124
+<ACCEPTANCE-DATETIME>20250124172428
+ACCESSION NUMBER:		0001079973-25-000129
+CONFORMED SUBMISSION TYPE:	4
+PUBLIC DOCUMENT COUNT:		1
+CONFORMED PERIOD OF REPORT:	20250123
+FILED AS OF DATE:		20250124
+DATE AS OF CHANGE:		20250124
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			FARNAM STREET PARTNERS LP /MN
+		CENTRAL INDEX KEY:			0001058465
+		ORGANIZATION NAME:           	
+		STATE OF INCORPORATION:			MN
+
+	FILING VALUES:
+		FORM TYPE:		4
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	000-14942
+		FILM NUMBER:		25555233
+
+	BUSINESS ADDRESS:	
+		STREET 1:		3033 EXCELSIOR BOULEVARD
+		STREET 2:		MINNEAPOLIS
+		CITY:			MINNEAPOLIS
+		STATE:			MN
+		ZIP:			55416
+		BUSINESS PHONE:		612-253-6058
+
+	MAIL ADDRESS:	
+		STREET 1:		3033 EXCELSIOR BOULEVARD
+		STREET 2:		MINNEAPOLIS
+		CITY:			MINNEAPOLIS
+		STATE:			MN
+		ZIP:			55416
+
+REPORTING-OWNER:	
+
+	OWNER DATA:	
+		COMPANY CONFORMED NAME:			CABILLOT RAYMOND E
+		CENTRAL INDEX KEY:			0001361476
+		ORGANIZATION NAME:           	
+
+	FILING VALUES:
+		FORM TYPE:		4
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	000-14942
+		FILM NUMBER:		25555234
+
+	MAIL ADDRESS:	
+		STREET 1:		3033 EXCELSIOR BLVD.
+		STREET 2:		STE 560
+		CITY:			MINNEAPOLIS
+		STATE:			MN
+		ZIP:			55416
+
+ISSUER:		
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			PRO DEX INC
+		CENTRAL INDEX KEY:			0000788920
+		STANDARD INDUSTRIAL CLASSIFICATION:	SURGICAL & MEDICAL INSTRUMENTS & APPARATUS [3841]
+		ORGANIZATION NAME:           	08 Industrial Applications and Services
+		IRS NUMBER:				841261240
+		FISCAL YEAR END:			0630
+
+	BUSINESS ADDRESS:	
+		STREET 1:		2361 MCGAW AVENUE
+		CITY:			IRVINE
+		STATE:			CA
+		ZIP:			92614
+		BUSINESS PHONE:		949-769-3231
+
+	MAIL ADDRESS:	
+		STREET 1:		2361 MCGAW AVENUE
+		CITY:			IRVINE
+		STATE:			CA
+		ZIP:			92614
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	PRO-DEX, INC.
+		DATE OF NAME CHANGE:	20151110
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	CONTEXT CAPITAL FUNDS
+		DATE OF NAME CHANGE:	20151104
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	PRO DEX INC
+		DATE OF NAME CHANGE:	19920703
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>4
+<SEQUENCE>1
+<FILENAME>ownership.xml
+<TEXT>
+<XML>
+<?xml version="1.0"?>
+<ownershipDocument>
+
+    <schemaVersion>X0508</schemaVersion>
+
+    <documentType>4</documentType>
+
+    <periodOfReport>2025-01-23</periodOfReport>
+
+    <notSubjectToSection16>0</notSubjectToSection16>
+
+    <issuer>
+        <issuerCik>0000788920</issuerCik>
+        <issuerName>PRO DEX INC</issuerName>
+        <issuerTradingSymbol>PDEX</issuerTradingSymbol>
+    </issuer>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001361476</rptOwnerCik>
+            <rptOwnerName>CABILLOT RAYMOND E</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>3033 EXCELSIOR BLVD. STE 560</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MINNEAPOLIS</rptOwnerCity>
+            <rptOwnerState>MN</rptOwnerState>
+            <rptOwnerZipCode>55416</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>1</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <reportingOwner>
+        <reportingOwnerId>
+            <rptOwnerCik>0001058465</rptOwnerCik>
+            <rptOwnerName>FARNAM STREET PARTNERS LP /MN</rptOwnerName>
+        </reportingOwnerId>
+        <reportingOwnerAddress>
+            <rptOwnerStreet1>3033 EXCELSIOR BOULEVARD, STE 560</rptOwnerStreet1>
+            <rptOwnerStreet2></rptOwnerStreet2>
+            <rptOwnerCity>MINNEAPOLIS</rptOwnerCity>
+            <rptOwnerState>MN</rptOwnerState>
+            <rptOwnerZipCode>55416</rptOwnerZipCode>
+            <rptOwnerStateDescription></rptOwnerStateDescription>
+        </reportingOwnerAddress>
+        <reportingOwnerRelationship>
+            <isDirector>0</isDirector>
+            <isOfficer>0</isOfficer>
+            <isTenPercentOwner>1</isTenPercentOwner>
+            <isOther>0</isOther>
+            <officerTitle></officerTitle>
+            <otherText></otherText>
+        </reportingOwnerRelationship>
+    </reportingOwner>
+
+    <aff10b5One>1</aff10b5One>
+
+    <nonDerivativeTable>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2025-01-23</value>
+            </transactionDate>
+            <deemedExecutionDate></deemedExecutionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>S</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+                <footnoteId id="F1"/>
+            </transactionCoding>
+            <transactionTimeliness></transactionTimeliness>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>835</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>42.00</value>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>D</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>334646</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>By Farnam Street Partners, L.P.</value>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+        <nonDerivativeTransaction>
+            <securityTitle>
+                <value>Common Stock</value>
+            </securityTitle>
+            <transactionDate>
+                <value>2025-01-24</value>
+            </transactionDate>
+            <deemedExecutionDate></deemedExecutionDate>
+            <transactionCoding>
+                <transactionFormType>4</transactionFormType>
+                <transactionCode>S</transactionCode>
+                <equitySwapInvolved>0</equitySwapInvolved>
+                <footnoteId id="F1"/>
+            </transactionCoding>
+            <transactionTimeliness></transactionTimeliness>
+            <transactionAmounts>
+                <transactionShares>
+                    <value>1436</value>
+                </transactionShares>
+                <transactionPricePerShare>
+                    <value>41.44</value>
+                    <footnoteId id="F2"/>
+                </transactionPricePerShare>
+                <transactionAcquiredDisposedCode>
+                    <value>D</value>
+                </transactionAcquiredDisposedCode>
+            </transactionAmounts>
+            <postTransactionAmounts>
+                <sharesOwnedFollowingTransaction>
+                    <value>333210</value>
+                </sharesOwnedFollowingTransaction>
+            </postTransactionAmounts>
+            <ownershipNature>
+                <directOrIndirectOwnership>
+                    <value>I</value>
+                </directOrIndirectOwnership>
+                <natureOfOwnership>
+                    <value>By Farnam Street Partners, L.P.</value>
+                </natureOfOwnership>
+            </ownershipNature>
+        </nonDerivativeTransaction>
+    </nonDerivativeTable>
+
+    <footnotes>
+        <footnote id="F1">The sales reported on this Form 4 were effected pursuant to a Rule 10b5-1 trading plan adopted by the reporting persons on September 20, 2024.</footnote>
+        <footnote id="F2">The price reported on Column 4 is a weighted average price.  These shares were sold in multiple transactions ranging from $41.00 to $41.75, inclusive. The reporting person undertakes to provide the issuer, any security holder of the issuer, or the staff of the Securities and Exchange Commission, upon request, full information regarding the number of shares sold at each separate price within the ranges set forth in footnote (2) to this Form.</footnote>
+    </footnotes>
+
+    <ownerSignature>
+        <signatureName>/s/ Alisha Charlton as attorney-in-fact for Raymond E. Cabillot</signatureName>
+        <signatureDate>2025-01-24</signatureDate>
+    </ownerSignature>
+
+    <ownerSignature>
+        <signatureName>/s/ Alisha Charlton as attorney-in-fact for Farnam Street Partners, L.P.</signatureName>
+        <signatureDate>2025-01-24</signatureDate>
+    </ownerSignature>
+</ownershipDocument>
+</XML>
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>

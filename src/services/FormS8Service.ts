@@ -9,7 +9,7 @@
  */
 
 import type { Form4Data } from "../types/form4.types";
-import type { BaseFilingService } from "./BaseFilingService";
+import type { GenericSecParsingService } from "./GenericSecParsingService";
 import type { ParsedDocument } from "../types/filing-output";
 import { inject, injectable } from "tsyringe";
 
@@ -20,8 +20,8 @@ import { inject, injectable } from "tsyringe";
 @injectable()
 export class FormS8Service {
   constructor(
-    @inject("BaseFilingService")
-    private baseFilingService: BaseFilingService<
+    @inject("GenericSecParsingService")
+    private genericSecParsingService: GenericSecParsingService<
       ParsedDocument<Form4Data>,
       Form4Data
     >,
@@ -44,27 +44,15 @@ export class FormS8Service {
     return null;
   }
 
-  /**
-   * Adds some unique form4 fields to the parsed document.
-   * @param documentText - The text of the document to parse.
-   * @returns The parsed document with the ownership document.
-   */
-  public async parseDocument(documentText: string): Promise<Form4Data> {
-    const parsed = await this.baseFilingService.parseDocument(documentText);
-    return parsed;
-  }
-
   public async parseDocumentAndFormatOutput(
     documentText: string,
     url: string,
   ): Promise<ParsedDocument<Form4Data>> {
-    const baseDoc = await this.baseFilingService.parseDocumentAndFormatOutput(
-      documentText,
-      url,
-    );
-
-    const formS8 = await this.parseDocument(documentText);
-    baseDoc.parsed = formS8;
+    const baseDoc =
+      await this.genericSecParsingService.parseDocumentAndFormatOutput(
+        documentText,
+        url,
+      );
     return baseDoc;
   }
 
@@ -80,7 +68,7 @@ export class FormS8Service {
     parsedDoc: Form4Data,
   ): ParsedDocument<Form4Data>["estimatedImpact"] {
     // Get base sentiment analysis from parent class
-    const baseImpact = this.baseFilingService.assessImpact(
+    const baseImpact = this.genericSecParsingService.assessImpact(
       rawDocumentText,
       parsedDoc,
     );

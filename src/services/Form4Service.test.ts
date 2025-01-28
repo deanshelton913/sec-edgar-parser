@@ -16,7 +16,10 @@ describe("Form4Service", () => {
     });
 
     it("should process an form4 document correctly", async () => {
-      const result = await service.parseDocumentAndFormatOutput(sampleFiling, 'whatever');
+      const result = await service.parseDocumentAndFormatOutput(
+        sampleFiling,
+        "whatever",
+      );
       expect(result).toEqual({
         attachments: [],
         basic: {
@@ -224,6 +227,19 @@ describe("Form4Service", () => {
           ],
         },
       });
+    });
+
+    it("should parse a diff form4 without throwing", async () => {
+      const form4 = readFileSync(
+        join(__dirname, "../../test/test-fixtures/form4-regression-test.txt"),
+        "utf-8",
+      );
+      try {
+        await service.parseDocumentAndFormatOutput(form4, "banana");
+        expect(true).toBe(true);
+      } catch (e) {
+        fail(e);
+      }
     });
   });
 });

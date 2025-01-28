@@ -2,7 +2,11 @@ import type { Form8KData } from "./form8k.types";
 import type { Form4Data } from "./form4.types";
 import type { Form13FFiling } from "./form13f.types";
 
-export type ParsedDocumentTypes = Form8KData | Form4Data | Form13FFiling;
+export type ParsedDocumentTypes =
+  | Form8KData
+  | Form4Data
+  | Form13FFiling
+  | ConsistentDocumentFields;
 
 export interface ParsedDocument<T extends ConsistentDocumentFields> {
   // Common SEC filing header fields

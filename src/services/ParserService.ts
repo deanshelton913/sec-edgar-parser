@@ -119,17 +119,16 @@ export class ParserService {
           delete obj[key]; // Delete the original key-value pair
         }
       }
-      if (typeof obj[newKey] === "object" && obj[newKey] !== null) {
+      if (Array.isArray(obj[newKey])) {
+        // Check if the value of the new key is an array
+        obj[newKey] = (obj[newKey] as IndexedObject[]).map((x) =>
+          this.recursivelyFlattenDuplicateKeysWithNumbers(x),
+        ); // Recursively traverse nested arrays
+      } else if (typeof obj[newKey] === "object" && obj[newKey] !== null) {
         // Check if the value of the new key is an object
         this.recursivelyFlattenDuplicateKeysWithNumbers(
           obj[newKey] as IndexedObject,
         ); // Recursively traverse nested objects
-      }
-      if (Array.isArray(obj[newKey])) {
-        // Check if the value of the new key is an array
-        obj[newKey] = (obj[newKey] as IndexedObject[]).map(
-          this.recursivelyFlattenDuplicateKeysWithNumbers,
-        ); // Recursively traverse nested arrays
       }
     }
     return obj; // Return the modified object

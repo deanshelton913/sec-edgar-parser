@@ -10,7 +10,7 @@
 
 import type { Schedule13GFiling } from "../types/schedule13g.types";
 import type { ParsedDocument } from "../types/filing-output";
-import type { BaseFilingService } from "./BaseFilingService";
+import type { GenericSecParsingService } from "./GenericSecParsingService";
 import type { ParserService } from "./ParserService";
 
 import { XMLParser } from "fast-xml-parser";
@@ -25,8 +25,8 @@ export class Schedule13GService {
   constructor(
     @inject("ParserService")
     private parserService: ParserService,
-    @inject("BaseFilingService")
-    private baseFilingService: BaseFilingService<
+    @inject("GenericSecParsingService")
+    private genericSecParsingService: GenericSecParsingService<
       ParsedDocument<Schedule13GFiling>,
       Schedule13GFiling
     >,
@@ -52,13 +52,16 @@ export class Schedule13GService {
     return null;
   }
 
-  /**
-   * Adds some unique form4 fields to the parsed document.
-   * @param documentText - The text of the document to parse.
-   * @returns The parsed document with the ownership document.
-   */
-  public async parseDocument(documentText: string): Promise<Schedule13GFiling> {
-    const parsed = await this.baseFilingService.parseDocument(documentText);
+  public async parseDocumentAndFormatOutput(
+    documentText: string,
+    url: string,
+  ): Promise<ParsedDocument<Schedule13GFiling>> {
+    const baseDoc =
+      await this.genericSecParsingService.parseDocumentAndFormatOutput(
+        documentText,
+        url,
+      );
+
     const xmlParser = new XMLParser();
 
     // process the edgarSubmission from the form 13f-hr filing.
@@ -68,7 +71,7 @@ export class Schedule13GService {
     if (match) {
       const xmlContent = match[0];
       const parsedXml = xmlParser.parse(xmlContent);
-      parsed.edgarSubmission =
+      baseDoc.parsed.edgarSubmission =
         this.parserService.normalizeKnownKeysAsAppropriateDataTypes(
           parsedXml.edgarSubmission,
         ) as unknown as Schedule13GFiling["edgarSubmission"];
@@ -79,20 +82,13 @@ export class Schedule13GService {
     if (match) {
       const xmlContent = match[0];
       const parsedXml = xmlParser.parse(xmlContent);
-      parsed.infoTable =
+      baseDoc.parsed.infoTable =
         this.parserService.normalizeKnownKeysAsAppropriateDataTypes(
           parsedXml.infoTable,
         ) as unknown as Schedule13GFiling["infoTable"];
     }
 
-    return parsed;
-  }
-
-  public async parseDocumentAndFormatOutput(
-    documentText: string,
-    url: string,
-  ): Promise<ParsedDocument<Schedule13GFiling>> {
-    return this.baseFilingService.parseDocumentAndFormatOutput(documentText, url);
+    return baseDoc;
   }
 
   /**
@@ -116,7 +112,7 @@ export class Schedule13GService {
     parsedDoc: Schedule13GFiling,
   ): ParsedDocument<Schedule13GFiling>["estimatedImpact"] {
     // Get base sentiment analysis from parent class
-    const baseImpact = this.baseFilingService.assessImpact(
+    const baseImpact = this.genericSecParsingService.assessImpact(
       rawDocumentText,
       parsedDoc,
     );

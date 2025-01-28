@@ -13,7 +13,7 @@ import { type Form8KData, Form8KItemTextMap } from "../types/form8k.types";
 import { form8KItemSentimentWeights } from "../data/item-weights";
 import type { ParsedDocument } from "../types/filing-output";
 import { inject, injectable } from "tsyringe";
-import type { BaseFilingService } from "./BaseFilingService";
+import type { GenericSecParsingService } from "./GenericSecParsingService";
 /**
  * Service for processing SEC Form 8-K filings.
  * Analyzes filing content to determine market impact and sentiment.
@@ -21,8 +21,8 @@ import type { BaseFilingService } from "./BaseFilingService";
 @injectable()
 export class Form8KService {
   constructor(
-    @inject("BaseFilingService")
-    private baseFilingService: BaseFilingService<
+    @inject("GenericSecParsingService")
+    private genericSecParsingService: GenericSecParsingService<
       ParsedDocument<Form8KData>,
       Form8KData
     >,
@@ -60,25 +60,19 @@ export class Form8KService {
     return null;
   }
 
-  public async parseDocument(documentText: string): Promise<Form8KData> {
-    return this.baseFilingService.parseDocument(documentText);
-  }
-
   public async parseDocumentAndFormatOutput(
     documentText: string,
     url: string,
   ): Promise<ParsedDocument<Form8KData>> {
     const base =
-      await this.baseFilingService.parseDocumentAndFormatOutput(documentText, url);
+      await this.genericSecParsingService.parseDocumentAndFormatOutput(
+        documentText,
+        url,
+      );
     const estimatedImpact = this.assessImpact(documentText, base.parsed);
-    const form8k = await this.parseDocument(documentText);
     return {
       ...base,
       estimatedImpact,
-      parsed: {
-        ...base.parsed,
-        ...form8k,
-      },
     };
   }
 
@@ -105,7 +99,7 @@ export class Form8KService {
     parsedDoc: Form8KData,
   ): ParsedDocument<Form8KData>["estimatedImpact"] {
     // Get base sentiment analysis from parent class
-    const baseImpact = this.baseFilingService.assessImpact(
+    const baseImpact = this.genericSecParsingService.assessImpact(
       rawDocumentText,
       parsedDoc,
     );
