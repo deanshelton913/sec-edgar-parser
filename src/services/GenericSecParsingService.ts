@@ -116,23 +116,7 @@ export class GenericSecParsingService<
   }
 
   protected getAcceptanceDatetime(parsedDoc: A, _documentText: string): number {
-    const dateStr = `${parsedDoc.acceptanceDatetime.slice(
-      0,
-      4,
-    )}-${parsedDoc.acceptanceDatetime.slice(
-      4,
-      6,
-    )}-${parsedDoc.acceptanceDatetime.slice(
-      6,
-      8,
-    )}T${parsedDoc.acceptanceDatetime.slice(
-      8,
-      10,
-    )}:${parsedDoc.acceptanceDatetime.slice(
-      10,
-      12,
-    )}:${parsedDoc.acceptanceDatetime.slice(12, 14)}-04:00`; // Changed to Eastern Time
-    return Math.floor(new Date(dateStr).getTime() / 1000);
+    return this.parseDatetime(parsedDoc.acceptanceDatetime);
   }
 
   protected getPublicDocumentCount(
@@ -142,15 +126,38 @@ export class GenericSecParsingService<
     return parsedDoc.publicDocumentCount;
   }
 
+  protected parseDatetime(input: number | string): number {
+    // Convert the input to a string for consistent processing
+    const datetimeStr = input.toString();
+
+    let formattedDate: string;
+
+    // Determine the format based on the input length
+    if (datetimeStr.length === 14) {
+      // Format for full datetime (YYYYMMDDHHMMSS)
+      formattedDate = `${datetimeStr.slice(0, 4)}-${datetimeStr.slice(
+        4,
+        6,
+      )}-${datetimeStr.slice(6, 8)}T${datetimeStr.slice(
+        8,
+        10,
+      )}:${datetimeStr.slice(10, 12)}:${datetimeStr.slice(12, 14)}-04:00`;
+    } else if (datetimeStr.length === 8) {
+      // Format for date only (YYYYMMDD)
+      formattedDate = `${datetimeStr.slice(0, 4)}-${datetimeStr.slice(
+        4,
+        6,
+      )}-${datetimeStr.slice(6, 8)}T00:00:00-04:00`;
+    } else {
+      throw new Error(`Unexpected datetime format: ${datetimeStr}`);
+    }
+
+    // Convert to Unix timestamp and return (in seconds)
+    return Math.floor(new Date(formattedDate).getTime() / 1000);
+  }
+
   protected getFiledAsOfDate(parsedDoc: A, _documentText: string): number {
-    const dateStr = `${parsedDoc.filedAsOfDate.slice(
-      0,
-      4,
-    )}-${parsedDoc.filedAsOfDate.slice(4, 6)}-${parsedDoc.filedAsOfDate.slice(
-      6,
-      8,
-    )}T00:00:00-04:00`; // Changed to Eastern Time
-    return Math.floor(new Date(dateStr).getTime() / 1000);
+    return this.parseDatetime(parsedDoc.filedAsOfDate);
   }
 
   protected getSubmissionType(parsedDoc: A, _documentText: string): string {
