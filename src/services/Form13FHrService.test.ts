@@ -50,7 +50,7 @@ describe("Schedule13G", () => {
               },
               eventDateRequiresFilingThisStatement: "01/15/2025",
               issuerInfo: {
-                issuerCik: 1374328,
+                issuerCik: "0001374328",
                 issuerCusip: "33817P306",
                 issuerName: "FITLIFE BRANDS, INC.",
                 issuerPrincipalExecutiveOfficeAddress: {
@@ -179,7 +179,7 @@ Each reporting person may be deemed to be a member of a group with respect to th
                 {
                   filerCredentials: {
                     ccc: "XXXXXXXX",
-                    cik: 1815572,
+                    cik: "0001815572",
                   },
                 },
               ],

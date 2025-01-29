@@ -229,7 +229,9 @@ export class ParserService {
       correctedXML += `${" ".repeat(stack.length * 2)}</${openTag}>\n`;
     }
 
-    const xmlParser = new XMLParser();
+    const xmlParser = new XMLParser({
+      numberParseOptions: { leadingZeros: false, hex: false, eNotation: false },
+    });
     let obj = xmlParser.parse(correctedXML);
     obj = this.camelizeKeys(obj);
 

@@ -61,7 +61,9 @@ export class Form13FHrService {
         documentText,
         url,
       );
-    const xmlParser = new XMLParser();
+    const xmlParser = new XMLParser({
+      numberParseOptions: { leadingZeros: false, hex: false, eNotation: false },
+    });
 
     // process the edgarSubmission from the form 13f-hr filing.
     let match = documentText.match(

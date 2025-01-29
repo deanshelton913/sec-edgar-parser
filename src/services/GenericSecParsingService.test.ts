@@ -6,7 +6,6 @@ import type {
   ParsedDocument,
 } from "../types/filing-output";
 import { container } from "tsyringe";
-import type { Form8KData } from "src/types/form8k.types";
 
 describe("GenericSecParsingService", () => {
   let service: GenericSecParsingService<
@@ -56,7 +55,10 @@ describe("GenericSecParsingService", () => {
         sampleFiling,
         "some_url",
       );
-      expect((doc.parsed as Form8KData).filer).toEqual([
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      expect((doc.parsed as any).depositorCik).toEqual("0000872471");
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      expect((doc.parsed as any).filer).toEqual([
         {
           businessAddress: {
             businessPhone: "313-323-7070",

@@ -56,7 +56,9 @@ export class Form4Service {
         documentText,
         url,
       );
-    const xmlParser = new XMLParser();
+    const xmlParser = new XMLParser({
+      numberParseOptions: { leadingZeros: false, hex: false, eNotation: false },
+    });
     const ownershipDocumentMatch = documentText.match(
       /<ownershipDocument>([\s\S]*?)<\/ownershipDocument>/g,
     );

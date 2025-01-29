@@ -116,7 +116,7 @@ describe("SecService", () => {
               },
               issuer: [
                 {
-                  issuerCik: 842517,
+                  issuerCik: "0000842517",
                   issuerName: "ISABELLA BANK Corp",
                   issuerTradingSymbol: "ISBA",
                 },
@@ -216,7 +216,7 @@ describe("SecService", () => {
                     rptOwnerZipCode: 48858,
                   },
                   reportingOwnerId: {
-                    rptOwnerCik: 1849440,
+                    rptOwnerCik: "0001849440",
                     rptOwnerName: "McGuirk Richard L",
                   },
                   reportingOwnerRelationship: {

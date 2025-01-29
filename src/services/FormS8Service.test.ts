@@ -15,7 +15,7 @@ describe("FormS8Service", () => {
       );
     });
 
-    it.only("should process an formS8 document correctly", async () => {
+    it("should process an formS8 document correctly", async () => {
       const result = await service.parseDocumentAndFormatOutput(
         sampleFiling,
         "whatever",
