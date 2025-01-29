@@ -84,11 +84,7 @@ export class GenericSecParsingService<
     for (const file of files) {
       const basePath = this.storageService.getS3KeyFromSecUrl(url);
       const key = `${basePath}/${file.name}`;
-
-      const baseDir = this.storageService.useS3
-        ? this.storageService.s3BaseDirectory
-        : this.storageService.localBaseDirectory;
-      keys.push(`${baseDir}/${key}`);
+      keys.push(key);
       promises.push(this.storageService.writeFile(key, file.data));
     }
     this.loggingService.debug(

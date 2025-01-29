@@ -43,7 +43,7 @@ export class SecService {
     @inject(DynamoDbService) private dynamoDbService: DynamoDbService,
   ) {
     this.baseUrl = "https://www.sec.gov/";
-    this.rssFeedUrl = `${this.baseUrl}/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&start=400&count=40&output=atom`;
+    this.rssFeedUrl = `${this.baseUrl}/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&start=0&count=40&output=atom`;
   }
 
   /**
@@ -159,9 +159,9 @@ export class SecService {
         );
         await this.dynamoDbService.setItem(feedItem.link, true);
       } catch (error) {
-        this.loggingService.error(error);
-        this.loggingService.warn(
-          `[SEC_SERVICE][${requestId}] NEW_FILING_FAILED: (type: ${feedItem.category.$.term})`,
+        this.loggingService.error(
+          `[SEC_SERVICE][${requestId}] NEW_FILING_FAILED: (type: ${feedItem.category.$.term}) ${feedItem.link}`,
+          error,
         );
         await this.dynamoDbService.setItem(feedItem.link, false);
         unparsedFilings.push(feedItem);

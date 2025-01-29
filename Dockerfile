@@ -37,4 +37,6 @@ WORKDIR ${LAMBDA_TASK_ROOT}
 
 COPY --from=build /app/out/node_modules/ ./node_modules
 COPY --from=build /app/out/dist .
-CMD ["index.handler"]
+
+# This CMD is overridden in terraform for the various lambdas.
+CMD ["index.handler"] 

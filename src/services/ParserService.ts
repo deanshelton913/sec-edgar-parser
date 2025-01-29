@@ -31,7 +31,6 @@ export class ParserService {
       let cleaned = this.removeNSpaces(line, depthOfFirstLine);
 
       const [key, val] = line.split(":");
-
       if (key.trim()) {
         let cleanVal = val.trim().replace(/'/g, `''`); // sanitize ' to '' for yml
         if (cleanVal.trim() === "") {
@@ -269,11 +268,20 @@ export class ParserService {
         break;
       }
     }
-
+    let hasSeenBlankLine = false;
     for (let i = startOfYamlContent; i < fileLines.length; i++) {
-      if (fileLines[i].trim().startsWith("<")) {
+      if (fileLines[i].trim() === "") {
+        hasSeenBlankLine = true;
+      }
+      if (fileLines[i].trim().startsWith("<") && hasSeenBlankLine) {
         endOfYamlLikeContent = i; // Return the index of the line
         break;
+      }
+
+      if (fileLines[i].trim().startsWith("<") && !hasSeenBlankLine) {
+        fileLines[i] = fileLines[i].replace(/\</g, "");
+        fileLines[i] = fileLines[i].replace(/\>/g, ":");
+        i--;
       }
     }
     for (let i = endOfYamlLikeContent; i < fileLines.length; i++) {

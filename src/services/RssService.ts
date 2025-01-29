@@ -1,5 +1,4 @@
 import Parser from "rss-parser";
-import RSS, { type FeedOptions } from "rss";
 import { injectable } from "tsyringe";
 
 export interface EdgarFilingRssFeed {
@@ -56,30 +55,5 @@ export class RssService {
 
   public async parseString(xml: string) {
     return this.rssParser.parseString(xml);
-  }
-
-  /**
-   * Create an RSS feed from the given options and items.
-   * @param options - The options for the RSS feed.
-   * @param items - The items to include in the RSS feed.
-   * @returns A promise that resolves to the generated RSS feed XML.
-   */
-  public async createFeed(
-    options: FeedOptions,
-    items: EdgarFilingRssFeedItem[],
-  ): Promise<string> {
-    /* lets create an rss feed */
-    const feed = new RSS(options);
-
-    /* loop over data and add to feed */
-    for (const item of items) {
-      feed.item({
-        title: item.title,
-        description: item.summary,
-        url: item.link,
-        date: item.updated,
-      });
-    }
-    return feed.xml();
   }
 }
