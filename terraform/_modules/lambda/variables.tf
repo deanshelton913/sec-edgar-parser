@@ -31,6 +31,12 @@ variable "max_concurrency" {
   description = "Maximum number of concurrent lambda that can be spun up."
 }
 
+variable "memory_size" {
+  type        = number
+  default     = 1024
+  description = "Max Memory before OOM."
+}
+
 variable "layers" {
   type        = list(string)
   default     = []

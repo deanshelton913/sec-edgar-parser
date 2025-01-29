@@ -10,7 +10,7 @@ resource "aws_lambda_function" "this" {
   layers                         = var.layers
   timeout                        = var.timeout
   reserved_concurrent_executions = var.max_concurrency
-  memory_size                    = 1024
+  memory_size                    = var.memory_size
 
   role = aws_iam_role.this.arn
 
