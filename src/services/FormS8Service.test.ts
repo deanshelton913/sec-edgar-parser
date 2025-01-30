@@ -22,16 +22,16 @@ describe("FormS8Service", () => {
       );
       expect(result).toEqual({
         attachments: [
-          "undefined/ex5-1_001.jpg",
-          "undefined/ex10-21_001.jpg",
-          "undefined/ex10-21_002.jpg",
-          "undefined/ex10-21_003.jpg",
-          "undefined/ex99-1_001.jpg",
-          "undefined/ex99-1_002.jpg",
-          "undefined/ex99-1_003.jpg",
-          "undefined/ex99-2_001.jpg",
-          "undefined/ex99-2_002.jpg",
-          "undefined/ex99-2_003.jpg",
+          "/undefined/ex5-1_001.jpg",
+          "/undefined/ex10-21_001.jpg",
+          "/undefined/ex10-21_002.jpg",
+          "/undefined/ex10-21_003.jpg",
+          "/undefined/ex99-1_001.jpg",
+          "/undefined/ex99-1_002.jpg",
+          "/undefined/ex99-1_003.jpg",
+          "/undefined/ex99-2_001.jpg",
+          "/undefined/ex99-2_002.jpg",
+          "/undefined/ex99-2_003.jpg",
         ],
         basic: {
           acceptanceDatetime: 1737753789,

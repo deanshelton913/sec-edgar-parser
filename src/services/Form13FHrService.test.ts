@@ -23,7 +23,7 @@ describe("Schedule13G", () => {
     );
 
     expect(result).toEqual({
-      attachments: ["undefined/acmex99ftlf.pdf"],
+      attachments: ["/undefined/acmex99ftlf.pdf"],
       basic: {
         acceptanceDatetime: 1737165458,
         accessionNumber: "0001815572-25-000002",

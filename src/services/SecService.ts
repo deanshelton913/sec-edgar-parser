@@ -9,6 +9,7 @@ import type {
 import { injectable, inject } from "tsyringe";
 import { LoggingService } from "./LoggingService";
 import { DynamoDbService } from "./DynamoDBService";
+import { StorageService } from "./StorageService";
 
 const DEFAULT_REQUEST_OPTIONS = {
   headers: {
@@ -41,6 +42,7 @@ export class SecService {
     @inject(RssService) private rssService: RssService,
     @inject(LoggingService) private loggingService: LoggingService,
     @inject(DynamoDbService) private dynamoDbService: DynamoDbService,
+    @inject(StorageService) private storageService: StorageService,
   ) {
     this.baseUrl = "https://www.sec.gov/";
     this.rssFeedUrl = `${this.baseUrl}/cgi-bin/browse-edgar?action=getcurrent&CIK=&type=&company=&dateb=&owner=include&start=0&count=40&output=atom`;
@@ -128,12 +130,7 @@ export class SecService {
    */
   protected async parseAllFilings(
     feedItems: EdgarFilingRssFeedItem[],
-  ): Promise<{
-    parsedFilings: ParsedDocument<ParsedDocumentTypes>[];
-    unparsedFilings: EdgarFilingRssFeedItem[];
-  }> {
-    const parsedFilings: ParsedDocument<ParsedDocumentTypes>[] = [];
-    const unparsedFilings: EdgarFilingRssFeedItem[] = [];
+  ): Promise<void> {
     for (const feedItem of feedItems) {
       const requestId = await this.httpService.deriveRequestId(
         this.stringReplaceFilingHtmlUrlToTxt(feedItem),
@@ -153,9 +150,16 @@ export class SecService {
 
       try {
         const parsedFiling = await this.parseSingleFiling(feedItem);
-        parsedFilings.push(parsedFiling);
         this.loggingService.debug(
           `[SEC_SERVICE][${requestId}] NEW_FILING_PARSED: (type: ${parsedFiling.basic.submissionType})`,
+        );
+        const key = `${this.storageService.getS3KeyFromSecUrl(
+          parsedFiling.basic.url,
+        )}.json`;
+
+        await this.storageService.writeFile(
+          key,
+          JSON.stringify(parsedFiling, null, 2),
         );
         await this.dynamoDbService.setItem(feedItem.link, true);
       } catch (error) {
@@ -164,17 +168,12 @@ export class SecService {
           error,
         );
         await this.dynamoDbService.setItem(feedItem.link, false);
-        unparsedFilings.push(feedItem);
       }
     }
-    return { parsedFilings, unparsedFilings };
   }
 
-  public async getRssFeedAndParseAllFilings(): Promise<{
-    parsedFilings: ParsedDocument<ParsedDocumentTypes>[];
-    unparsedFilings: EdgarFilingRssFeedItem[];
-  }> {
+  public async getRssFeedAndParseAllFilings(): Promise<void> {
     const rssFeed = await this.getSecFilingRssFeed();
-    return this.parseAllFilings(rssFeed.items);
+    await this.parseAllFilings(rssFeed.items);
   }
 }

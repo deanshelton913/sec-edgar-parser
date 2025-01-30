@@ -7,9 +7,10 @@ const s3 = new AWS.S3();
 export const get = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
+  // Extract 'filingId' from query parameters
+  const filingId = `${event.pathParameters?.part1}/${event.pathParameters?.part2}/${event.pathParameters?.part3}`;
   try {
-    // Extract 'filingId' from query parameters
-    const filingId = event.queryStringParameters?.filingId;
+    
 
     if (!filingId) {
       return {
@@ -48,7 +49,7 @@ export const get = async (
       return {
         statusCode: 404,
         body: JSON.stringify({
-          message: `File with filingId '${event.queryStringParameters?.filingId}' not found.`,
+          message: `File with filingId '${filingId}' not found.`,
         }),
       };
     }

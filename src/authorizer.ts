@@ -6,6 +6,7 @@ import type {
 export const handler = async (
   event: APIGatewayTokenAuthorizerEvent,
 ): Promise<APIGatewayAuthorizerResult> => {
+  console.log({event})
   try {
     // Validate the token (replace with your logic, e.g., check API key)
     const token = event.authorizationToken;
@@ -23,7 +24,7 @@ export const handler = async (
           {
             Action: "execute-api:Invoke",
             Effect: "Allow",
-            Resource: event.methodArn, // The ARN of the method being accessed
+            Resource: `arn:aws:execute-api:us-west-2:432916826401:2a08lh8po2/prod/*`, // The ARN of the method being accessed
           },
         ],
       },

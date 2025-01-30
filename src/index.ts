@@ -7,7 +7,6 @@ const loggingService = container.resolve("LoggingService") as LoggingService;
 exports.handler = async () => {
   try {
     await main();
-    loggingService.debug("[MAIN] done");
   } catch (e) {
     loggingService.error(`[MAIN] FATAL ERROR: ${e}`);
     process.exit(1);

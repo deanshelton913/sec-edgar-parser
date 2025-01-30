@@ -11,7 +11,6 @@ import type { ParserService } from "./ParserService";
 import { FailureByDesign } from "../FailureByDesign";
 import type { UueCodecService } from "./UueCodecService";
 import type { LoggingService } from "./LoggingService";
-import type { HttpService } from "./HttpService";
 
 const sentiment = new Sentiment();
 
@@ -25,7 +24,6 @@ export class GenericSecParsingService<
     @inject("UueCodecService") private uueCodecService: UueCodecService,
     @inject("StorageService") private storageService: StorageService,
     @inject("LoggingService") private loggingService: LoggingService,
-    @inject("HttpService") private httpService: HttpService,
   ) {}
 
   public async parseDocumentAndFormatOutput(
@@ -52,7 +50,7 @@ export class GenericSecParsingService<
         url,
       },
       estimatedImpact: this.assessImpact(documentText, parsedDocument), // the estimated impact of the filing on the market
-      parsed: parsedDocument, // This does duplicate data, but it's here to allow for type safety.
+      parsed: parsedDocument,
       attachments: await this.getAttachments(parsedDocument, documentText, url),
     } as unknown as T;
   }
@@ -70,10 +68,6 @@ export class GenericSecParsingService<
     }
     const files = this.uueCodecService.decodeUuEncodedFiles(documentText);
     if (files.length === 0) {
-      const requestId = await this.httpService.deriveRequestId(url);
-      this.loggingService.warn(
-        `[BASE_FILING_SERVICE][${requestId}] NO_ATTACHMENTS_FOUND`,
-      );
       return [];
     }
     this.loggingService.debug(
@@ -83,12 +77,12 @@ export class GenericSecParsingService<
     const keys = [];
     for (const file of files) {
       const basePath = this.storageService.getS3KeyFromSecUrl(url);
-      const key = `${basePath}/${file.name}`;
+      const key = `/${basePath}/${file.name}`;
       keys.push(key);
       promises.push(this.storageService.writeFile(key, file.data));
     }
     this.loggingService.debug(
-      `[BASE_FILING_SERVICE] WRITING_ATTACHMENTS: ${keys.join(",\n")}`,
+      `[BASE_FILING_SERVICE] WRITING_ATTACHMENTS: ${keys.join(",")}`,
     );
     await Promise.all(promises);
 
