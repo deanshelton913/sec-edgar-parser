@@ -1,6 +1,6 @@
 terraform {
   backend "local" {
-    path = "./terraform.tfstate"  # Path to store the state file
+    path = "./terraform.tfstate" # Path to store the state file
   }
 
   required_version = "~> 1.1"

@@ -1,6 +1,6 @@
 locals {
-  aws_region         = "us-west-2"
-  aws_account_id     = "432916826401"
+  aws_region     = "us-west-2"
+  aws_account_id = "432916826401"
 
   env    = var.environment
   prefix = "${local.env}-sec-edgar-parser"
