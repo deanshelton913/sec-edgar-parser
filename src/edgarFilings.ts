@@ -1,64 +1,60 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import * as AWS from "aws-sdk";
 
-// Initialize the S3 client
 const s3 = new AWS.S3();
 
 export const get = async (
   event: APIGatewayProxyEvent,
 ): Promise<APIGatewayProxyResult> => {
-  // Extract 'filingId' from query parameters
-  const filingId = `${event.pathParameters?.part1}/${event.pathParameters?.part2}/${event.pathParameters?.part3}`;
+  console.log({ event });
+  const { part1, part2, part3, part4 } = event.pathParameters || {};
+  const filingId = [part1, part2, part3, part4].filter(Boolean).join("/");
+
+  if (!filingId) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: "Missing required path parameters." }),
+    };
+  }
+
   try {
-    
-
-    if (!filingId) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: "Missing required query parameter 'filingId'.",
-        }),
-      };
-    }
-
-    // Define the S3 bucket and key
     const bucketName = "sec-edgar-production";
     const objectKey = `edgar-filings/${filingId}`;
 
-    // Get the file from S3
     const file = await s3
-      .getObject({
-        Bucket: bucketName,
-        Key: objectKey,
-      })
+      .getObject({ Bucket: bucketName, Key: objectKey })
       .promise();
 
-    // Return the file content
+    if (!file.Body) {
+      return {
+        statusCode: 404,
+        body: JSON.stringify({ message: "File is empty or missing." }),
+      };
+    }
+
+    const contentType = file.ContentType;
+
+    const isJson = contentType?.startsWith("application/json");
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json", // Ensure correct MIME type
-      },
-      body: file.Body?.toString("utf-8") || "", // Convert file buffer to string
+      headers: { "Content-Type": contentType || "application/text" },
+      body: isJson ? file.Body.toString("utf-8") : file.Body.toString("base64"), // ✅ Avoid Base64 for JSON
+      isBase64Encoded: !isJson, // ✅ Only Base64-encode non-JSON content
     };
   } catch (error) {
     console.error("Error fetching file from S3:", error);
-    const e = error as { code: string };
-    // Return an error response if the file is not found or there's an issue
+    const e = error as { code?: string };
+
     if (e.code === "NoSuchKey") {
       return {
         statusCode: 404,
-        body: JSON.stringify({
-          message: `File with filingId '${filingId}' not found.`,
-        }),
+        body: JSON.stringify({ message: `File '${filingId}' not found.` }),
       };
     }
 
     return {
       statusCode: 500,
-      body: JSON.stringify({
-        message: "An error occurred while processing your request.",
-      }),
+      body: JSON.stringify({ message: "An error occurred." }),
     };
   }
 };

@@ -22,3 +22,22 @@ resource "aws_dynamodb_table" "processed_filings" {
     Project     = "FilingProcessor"
   }
 }
+
+resource "aws_dynamodb_table" "api_keys" {
+  name         = "${local.prefix}-api-keys"
+  billing_mode = "PAY_PER_REQUEST"
+
+  # Define the primary key schema
+  hash_key = "api_key"
+
+  # Define attribute definitions
+  attribute {
+    name = "api_key"
+    type = "S" # String type for UUID
+  }
+
+  # Enable server-side encryption for security
+  server_side_encryption {
+    enabled = true
+  }
+}

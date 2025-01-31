@@ -28,5 +28,12 @@ module "authorizer" {
       Effect   = "Allow"
       Resource = "*"
     },
+    {
+      Action = [
+        "dynamodb:*",
+      ]
+      Effect   = "Allow"
+      Resource = "*"
+    },
   ]
 }

@@ -135,7 +135,7 @@ export class SecService {
       const requestId = await this.httpService.deriveRequestId(
         this.stringReplaceFilingHtmlUrlToTxt(feedItem),
       );
-      const filingStatusRecord = await this.dynamoDbService.getItem(
+      const filingStatusRecord = await this.dynamoDbService.getFilingStatus(
         feedItem.link,
       );
       if (filingStatusRecord) {
@@ -161,13 +161,13 @@ export class SecService {
           key,
           JSON.stringify(parsedFiling, null, 2),
         );
-        await this.dynamoDbService.setItem(feedItem.link, true);
+        await this.dynamoDbService.setFilingStatus(feedItem.link, true);
       } catch (error) {
         this.loggingService.error(
           `[SEC_SERVICE][${requestId}] NEW_FILING_FAILED: (type: ${feedItem.category.$.term}) ${feedItem.link}`,
           error,
         );
-        await this.dynamoDbService.setItem(feedItem.link, false);
+        await this.dynamoDbService.setFilingStatus(feedItem.link, false);
       }
     }
   }

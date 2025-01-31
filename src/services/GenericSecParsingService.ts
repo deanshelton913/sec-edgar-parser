@@ -11,7 +11,7 @@ import type { ParserService } from "./ParserService";
 import { FailureByDesign } from "../FailureByDesign";
 import type { UueCodecService } from "./UueCodecService";
 import type { LoggingService } from "./LoggingService";
-
+import fs from "node:fs";
 const sentiment = new Sentiment();
 
 @injectable()
@@ -80,6 +80,8 @@ export class GenericSecParsingService<
       const key = `/${basePath}/${file.name}`;
       keys.push(key);
       promises.push(this.storageService.writeFile(key, file.data));
+      console.log(`/tmp/${file.name}`);
+      fs.writeFileSync(`/tmp/${file.name}`, file.data);
     }
     this.loggingService.debug(
       `[BASE_FILING_SERVICE] WRITING_ATTACHMENTS: ${keys.join(",")}`,
