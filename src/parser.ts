@@ -64,10 +64,12 @@ function badYamlToObj(text: string) {
   for (const line of lines) {
     let cleaned = removeNSpaces(line, depthOfFirstLine);
 
-    const [key, val] = line.split(":");
+    const colonIndex = line.indexOf(":");
+    const key = colonIndex === -1 ? line : line.slice(0, colonIndex);
+    const rawVal = colonIndex === -1 ? "" : line.slice(colonIndex + 1);
 
     if (key.trim()) {
-      let cleanVal = val.trim().replace(/'/g, "''");
+      let cleanVal = (rawVal || "").trim().replace(/'/g, "''");
 
       if (cleanVal.trim() === "") {
         cleanVal = "";
@@ -260,10 +262,32 @@ function camelizeKeys<T>(obj: T): T {
   return newObj as T;
 }
 
+function normalizeInlineHeaderTag(line: string) {
+  const trimmed = line.trim();
+  const match = trimmed.match(/^<([A-Z0-9-]+)>([^<]*)$/);
+  if (!match) return line;
+
+  const [, tag, value] = match;
+
+  if (tag === "SEC-HEADER" || tag === "/SEC-HEADER" || tag === "SEC-DOCUMENT") {
+    return line;
+  }
+
+  const cleanValue = value.trim();
+  return `${tag}: ${cleanValue}`;
+}
+
 export function trimDocument(file: string) {
   const fileLines = file.split("\n");
-  let endOfYamlLikeContent = 0;
-  let endOfXMLindex = 0;
+
+  const startOfHeaderIndex = fileLines.findIndex((line) =>
+    line.trim().startsWith("<SEC-HEADER>"),
+  );
+
+  const endOfHeaderIndex = fileLines.findIndex(
+    (line, idx) => idx > startOfHeaderIndex && line.trim() === "</SEC-HEADER>",
+  );
+
   let startOfYamlContent = 0;
   for (let i = 0; i < fileLines.length; i++) {
     if (fileLines[i].trim().includes("ACCESSION NUMBER:")) {
@@ -272,24 +296,29 @@ export function trimDocument(file: string) {
     }
   }
 
+  let endOfYamlLikeContent = -1;
   for (let i = startOfYamlContent; i < fileLines.length; i++) {
-    if (fileLines[i].trim().startsWith("<")) {
-      endOfYamlLikeContent = i; // Return the index of the line
-      break;
-    }
-  }
-  for (let i = endOfYamlLikeContent; i < fileLines.length; i++) {
-    if (fileLines[i].trim() === "</SEC-HEADER>") {
-      endOfXMLindex = i; // Return the index of the line
+    const trimmed = fileLines[i].trim();
+    // first tag-only line (e.g., <SERIES-...>) marks start of XML-ish area
+    if (/^<[^>]+>$/.test(trimmed)) {
+      endOfYamlLikeContent = i;
       break;
     }
   }
 
+  if (endOfYamlLikeContent === -1) {
+    endOfYamlLikeContent =
+      endOfHeaderIndex !== -1 ? endOfHeaderIndex : fileLines.length;
+  }
+
   const yamlLikeStructure = fileLines
     .slice(startOfYamlContent, endOfYamlLikeContent)
+    .map(normalizeInlineHeaderTag)
     .join("\n");
+
+  const xmlEnd = endOfHeaderIndex !== -1 ? endOfHeaderIndex : fileLines.length;
   const xmlLikeStructure = `<SEC-HEADER>
-  ${fileLines.slice(endOfYamlLikeContent, endOfXMLindex + 1).join("\n")}`;
+  ${fileLines.slice(endOfYamlLikeContent, xmlEnd + 1).join("\n")}`;
 
   return { yamlLikeStructure, xmlLikeStructure };
 }

@@ -124,4 +124,13 @@ describe("SEC EDGAR Parser", () => {
     expect(obj.filer[0].businessAddress.street1).toBe("26 SE'ADYA GA'ON");
     expect(obj.filer[0].mailAddress.street1).toBe("26 SE'ADYA GA'ON");
   });
+
+  test("Properly parses document 8", async () => {
+    const obj = await parser.getObjectFromString(docs[8]);
+
+    expect(obj.noQuarterlyActivity).toBe("N");
+    expect(obj.noAnnualActivity).toBe("Y");
+    expect(obj.filer[0]).toBeTruthy();
+    console.log(obj.filer[0]);
+  });
 });
