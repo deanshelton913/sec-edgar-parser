@@ -30,9 +30,15 @@ jobs:
         run: npm clean-install
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
+      - name: Clear npm auth (ensure OIDC is used)
+        run: |
+          rm -f ~/.npmrc /home/runner/.npmrc /home/runner/work/_temp/.npmrc
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ""
+          NPM_TOKEN: ""
+          NPM_CONFIG__AUTH: ""
           NPM_CONFIG_PROVENANCE: true
           NPM_CONFIG_ACCESS: public
         run: |
